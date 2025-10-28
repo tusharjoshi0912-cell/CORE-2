@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Core-2 Dashboard</title>
+    
+    <style>
+        /* --- [Section 1: CSS Variables & Theme] ---
+          NEW: Elegant, Dark, & Modern Aesthetic with Refined Glassmorphism.
+        */
+        :root {
+            /* NEW: Richer, darker background gradient */
+            --bg-gradient: linear-gradient(135deg, #1e1e2d 0%, #2a2a4a 100%); 
+            
+            /* Subtler Glassmorphism for cards and containers */
+            --card-bg: rgba(255, 255, 255, 0.08); /* More transparent */
+            --card-bg-hover: rgba(255, 255, 255, 0.15); /* Slightly less transparent on hover */
+            --card-border: rgba(255, 255, 255, 0.15); /* Subtle white border */
+            --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.4); /* Deeper shadow */
+
+            /* Elegant accent for highlights */
+            --accent-color: #00d2ff; /* Bright, clean cyan/blue */
+            --accent-glow: 0 0 25px 0 rgba(0, 210, 255, 0.5); /* Matching glow */
+            
+            /* Text colors optimized for dark background */
+            --text-primary: #f0f0f0;   /* Light grey for main text */
+            --text-secondary: #c0c0c0; /* Slightly darker grey for subtext */
+            
+            /* Transitions for smooth interactions */
+            --transition-fast: all 0.2s ease-in-out;
+            --transition-smooth: all 0.3s ease-in-out;
+        }
+
+        /* --- [Section 2: Global Styles] --- */
+        html {
+            box-sizing: border-box;
+            scroll-behavior: smooth;
+        }
+
+        *, *:before, *:after {
+            box-sizing: inherit;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            margin: 0;
+            background-color: #1e1e2d; /* Fallback color */
+            background-image: var(--bg-gradient);
+            background-attachment: fixed;
+            color: var(--text-primary);
+            padding: 1.5rem;
+            min-height: 100vh;
+        }
+
+        /* --- [Section 3: Layout & Typography] --- */
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: var(--card-bg); /* Use card-bg for main container */
+            backdrop-filter: blur(12px); /* Slightly stronger blur */
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 20px;
+            border: 1px solid var(--card-border);
+            padding: 2.5rem; /* More generous padding */
+            box-shadow: var(--card-shadow);
+        }
+
+        h1 {
+            font-size: 2.8rem; /* Even larger, more impactful */
+            font-weight: 700;
+            padding-bottom: 1.2rem;
+            margin: 0 0 2.5rem 0; /* More spacing */
+            border-bottom: 2px solid var(--accent-color);
+            text-shadow: 0 3px 6px rgba(0,0,0,0.3);
+            letter-spacing: 0.05em; /* Subtle letter spacing */
+            color: var(--text-primary); /* Ensure header text is primary white */
+        }
+
+        h2 {
+            font-size: 1.6rem; /* More prominent */
+            font-weight: 600;
+            margin: 0;
+            color: var(--text-primary);
+        }
+
+        /* --- [Section 4: Unit Selector Cards] --- */
+        .unit-selector-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.8rem; /* Increased gap */
+            margin-bottom: 2rem; /* Space before content area */
+        }
+
+        .unit-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border-radius: 15px; /* More rounded */
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            padding: 2.2rem 1.8rem; /* More padding */
+            border: 1px solid var(--card-border);
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            position: relative;
+            text-align: center;
+            display: flex; /* For emoji & text alignment */
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .unit-card:hover {
+            transform: translateY(-10px) scale(1.03); /* More pronounced lift and scale */
+            box-shadow: var(--card-shadow);
+            background: var(--card-bg-hover);
+        }
+
+        .unit-card .emoji {
+            font-size: 2.8rem; /* Large emoji */
+            margin-bottom: 0.8rem;
+            line-height: 1;
+        }
+
+        /* Style for the "active" selected card */
+        .unit-card.active {
+            box-shadow: var(--accent-glow), var(--card-shadow);
+            border-color: var(--accent-color);
+            transform: translateY(-5px) scale(1.01); /* Subtle lift, not too high */
+            background: var(--card-bg-hover);
+        }
+
+        /* Accessibility: Focus visible state */
+        .unit-card:focus-visible,
+        .question-item[role="button"]:focus-visible,
+        .modal-close-btn:focus-visible,
+        a.question-item:focus-visible { /* Also for question links */
+            outline: 3px solid var(--accent-color);
+            outline-offset: 4px; /* More offset */
+            border-radius: 15px; /* Match card border radius */
+        }
+
+        /* --- [Section 5: Content Display Area] --- */
+        .content-area {
+            margin-top: 3rem; /* More separation */
+        }
+        
+        .unit-content[hidden] {
+            display: none;
+        }
+
+        .unit-content {
+            animation: fadeIn 0.4s ease-out forwards; /* More noticeable fade-in */
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(25px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .content-inner {
+            background: var(--card-bg); /* Use card-bg for inner content block */
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 15px;
+            box-shadow: var(--card-shadow);
+            padding: 2.5rem 3rem;
+            border: 1px solid var(--card-border);
+        }
+        
+        .content-title {
+            font-size: 2.2rem; /* Consistent with main heading sub-level */
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-top: 0;
+            margin-bottom: 2rem;
+            padding-bottom: 1.2rem;
+            border-bottom: 1px solid var(--accent-color);
+        }
+
+        /* --- [Section 6: Vertical Question List (for Unit-2)] --- */
+        .vertical-question-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem; /* Slightly larger gap */
+        }
+
+        .question-item {
+            background-color: rgba(255, 255, 255, 0.03); /* Very subtle, darker glass */
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 1.5rem 2rem; /* More generous padding */
+            transition: var(--transition-fast);
+            text-decoration: none;
+            color: var(--text-primary);
+            display: block;
+            position: relative; /* For icon positioning */
+        }
+
+        /* Add hover/focus for all interactive items */
+        .question-item:hover,
+        .question-item:focus-visible {
+            transform: translateY(-5px); /* Stronger lift */
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3); /* Deeper shadow on hover */
+            border-color: var(--accent-color);
+            background-color: rgba(255, 255, 255, 0.08); /* Slightly brighter glass on hover */
+        }
+
+        /* Make modal-trigger items look clickable */
+        .question-item[data-modal-trigger] {
+            cursor: pointer;
+        }
+
+        .question-item h3 {
+            font-size: 1.3rem; /* Larger question title */
+            font-weight: 600;
+            margin: 0 0 0.8rem 0;
+            padding-right: 30px; /* Space for icon */
+        }
+
+        .question-item ul {
+            list-style-type: lower-alpha;
+            margin: 0;
+            padding-left: 25px; /* Indent for list items */
+            font-size: 1rem; /* Slightly larger list text */
+            line-height: 1.6;
+            color: var(--text-secondary);
+        }
+        
+        .question-item li {
+            margin-bottom: 0.3rem;
+        }
+
+        .question-item .icon {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            font-size: 1.2rem;
+            color: var(--accent-color);
+            transition: transform 0.2s ease-out;
+        }
+
+        .question-item:hover .icon {
+            transform: scale(1.1);
+        }
+
+        /* --- [Section 7: Modal Dialog] --- */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background-color: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(10px); /* Stronger blur for modal overlay */
+            -webkit-backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s;
+            z-index: 1000;
+        }
+
+        .modal-overlay.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-dialog {
+            background: linear-gradient(135deg, #3a3a5a, #4a4a7a); /* Darker, richer modal background */
+            border-radius: 20px;
+            padding: 3rem;
+            width: 90%;
+            max-width: 550px; /* Wider modal */
+            box-shadow: var(--card-shadow);
+            position: relative;
+            transform: scale(0.8) translateY(50px); /* More dramatic entrance */
+            transition: transform 0.4s cubic-bezier(0.3, 0.7, 0.4, 1.2); /* Bouncier transition */
+            border: 1px solid var(--card-border);
+            text-align: center;
+        }
+
+        .modal-overlay.visible .modal-dialog {
+            transform: scale(1) translateY(0);
+        }
+
+        .modal-dialog p {
+            margin: 0;
+            font-size: 1.2rem; /* Larger and clearer message */
+            line-height: 1.6;
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .modal-close-btn {
+            position: absolute;
+            top: 1.2rem;
+            right: 1.2rem;
+            background: rgba(255, 255, 255, 0.15);
+            border: none;
+            cursor: pointer;
+            padding: 0.6rem;
+            border-radius: 50%;
+            color: var(--text-primary);
+            transition: var(--transition-fast);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+
+        .modal-close-btn:hover {
+            background-color: var(--accent-color);
+            color: #1e1e2d; /* Dark text on accent hover */
+            transform: rotate(180deg) scale(1.1); /* Spin and grow slightly */
+        }
+
+        .modal-close-btn svg {
+            width: 22px; /* Slightly larger icon */
+            height: 22px;
+            display: block;
+        }
+
+        /* --- Media Queries for Responsiveness --- */
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+
+            .container {
+                padding: 1.5rem;
+                border-radius: 15px;
+            }
+
+            h1 {
+                font-size: 2rem;
+                margin-bottom: 1.5rem;
+            }
+
+            .unit-selector-grid {
+                grid-template-columns: 1fr; /* Stack on smaller screens */
+                gap: 1rem;
+            }
+
+            .unit-card {
+                padding: 1.5rem;
+                border-radius: 10px;
+            }
+
+            .unit-card:hover {
+                transform: translateY(-5px) scale(1.01);
+            }
+
+            .content-area {
+                margin-top: 2rem;
+            }
+
+            .content-inner {
+                padding: 1.5rem;
+                border-radius: 10px;
+            }
+
+            .content-title {
+                font-size: 1.8rem;
+                margin-bottom: 1.5rem;
+            }
+
+            .vertical-question-list {
+                gap: 0.8rem;
+            }
+
+            .question-item {
+                padding: 1rem 1.2rem;
+                border-radius: 8px;
+            }
+
+            .question-item h3 {
+                font-size: 1.1rem;
+                margin-bottom: 0.5rem;
+                padding-right: 25px;
+            }
+
+            .question-item .icon {
+                top: 1rem;
+                right: 1rem;
+                font-size: 1rem;
+            }
+
+            .modal-dialog {
+                padding: 2rem;
+            }
+
+            .modal-dialog p {
+                font-size: 1rem;
+            }
+        }
+
+    </style>
+    <!-- Optional: Link to Google Fonts for 'Inter' if you want to use it, otherwise default sans-serif will be used --><link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <div class="container">
+        <!-- Page Header --><header>
+            <h1>✨ Core-2 Dashboard ✨</h1>
+        </header>
+
+        <main>
+            <!-- Unit Selector Cards --><div class="unit-selector-grid">
+
+                <div class="unit-card" role="button" tabindex="0" data-target="unit-3-content" aria-controls="unit-3-content" aria-expanded="false">
+                    <span class="emoji">📚</span>
+                    <h2>Unit-3 (BP)</h2>
+                </div>
+
+                <div class="unit-card" role="button" tabindex="0" data-target="unit-2-content" aria-controls="unit-2-content" aria-expanded="false">
+                    <span class="emoji">🧠</span>
+                    <h2>Unit-2 (KG)</h2>
+                </div>
+
+                <div class="unit-card" role="button" tabindex="0" data-target="unit-1-content" aria-controls="unit-1-content" aria-expanded="false">
+                    <span class="emoji">🌟</span>
+                    <h2>Unit-1 (BC)</h2>
+                </div>
+                
+            </div>
+
+            <!-- Content Display Area --><div id="content-display-area" class="content-area">
+                
+                <!-- Unit-3 Content (Hidden) --><div id="unit-3-content" class="unit-content" hidden>
+                    <div class="content-inner">
+                        <h2 class="content-title">📚 Unit-3 (BP)</h2>
+                        <p>Content for Unit-3 will be added here. Stay tuned!</p>
+                    </div>
+                </div>
+        
+                <!-- Unit-2 Content (Hidden) --><div id="unit-2-content" class="unit-content" hidden>
+                    <div class="content-inner">
+                        <h2 class="content-title">🧠 Unit-2 (KG) - Psychological Measurement & Assessment</h2>
+                        
+                        <div class="vertical-question-list">
+                            
+                            <!-- Q-1: Link --><a href="https://c2-u2-q1.vercel.app/" target="_blank" rel="noopener noreferrer" class="question-item">
+                                <h3>1. Explain the Method of Equal Appearing Intervals.</h3>
+                                <ul>
+                                    <li>a) Outline the steps involved in constructing a scale using this method.</li>
+                                    <li>b) Discuss its assumptions and major advantages.</li>
+                                    <li>c) Critically evaluate its limitations with suitable psychological examples.</li>
+                                </ul>
+                                <span class="icon">🔗</span> <!-- Link icon --></a>
+                            
+                            <!-- Q-2: Link --><a href="https://c2-u2-q2.vercel.app/" target="_blank" rel="noopener noreferrer" class="question-item">
+                                <h3>2. Describe the Method of Summated Ratings (Likert Scale).</h3>
+                                <ul>
+                                    <li>a) Explain the process of item selection, scoring, and validation.</li>
+                                    <li>b) Differentiate between summated and equal-appearing interval scales.</li>
+                                    <li>c) Evaluate the reliability and practical utility of the Likert approach.</li>
+                                </ul>
+                                <span class="icon">🔗</span> <!-- Link icon --></a>
+
+                            <!-- Q-3: Modal Trigger --><div class="question-item" data-modal-trigger role="button" tabindex="0">
+                                <h3>3. Discuss the Method of Paired Comparisons.</h3>
+                                <ul>
+                                    <li>a) Describe how stimuli are compared and ranked in this method.</li>
+                                    <li>b) Explain the mathematical basis used to derive the scale values.</li>
+                                    <li>c) Indicate potential areas in psychology where this method is most effective.</li>
+                                </ul>
+                                <span class="icon">📝</span> <!-- Content icon --></div>
+                            
+                            <!-- Q-4 to Q-14: Modal Triggers --><div class="question-item" data-modal-trigger role="button" tabindex="0">
+                                <h3>4. Elaborate on the Method of Successive Categories.</h3>
+                                <ul>
+                                    <li>a) Explain the conceptual framework and procedure of this scaling technique.</li>
+                                    <li>b) Compare it with the method of equal-appearing intervals.</li>
+                                    <li>c) Discuss how the categorization of stimuli affects data interpretation.</li>
+                                </ul>
+                                <span class="icon">📝</span>
+                            </div>
+                            <div class="question-item" data-modal-trigger role="button" tabindex="0">
+                                <h3>5. Analyze various Ranking Methods used in psychological measurement.</h3>
+                                <ul>
+                                    <li>a) Differentiate between simple ranking and comparative ranking.</li>
+                                    <li>b) Explain how ranking can be used to measure preferences and attitudes.</li>
+                                    <li>c) Discuss problems such as order effects and respondent fatigue.</li>
+                                </ul>
+                                <span class="icon">📝</span>
+                            </div>
+                            <div class="question-item" data-modal-trigger role="button" tabindex="0">
+                                <h3>6. Explain the use of the Semantic Differential and Q-Sort techniques.</h3>
+                                <ul>
+                                    <li>a) Describe the structure and interpretation of semantic differential scales.</li>
+                                    <li>b) Explain how Q-Sort is employed in personality and self-concept research.</li>
+                                    <li>c) Compare their psychometric strengths and weaknesses.</li>
+                                </ul>
+                                <span class="icon">📝</span>
+                            </div>
+                            <div class="question-item" data-modal-trigger role="button" tabindex="0">
+                                <h3>7. Critically discuss the common Problems and Evaluations of Scaling Methods.</h3>
+                                <ul>
+                                    <li>a) Identify general challenges faced during scaling (e.g., response bias, social desirability).</li>
+                                    <li>b) Discuss validity and reliability issues in attitude measurement.</li>
+                                    <li>c) Suggest strategies to enhance accuracy in psychological scaling.</li>
+                                </ul>
+                                <span class="icon">📝</span>
+                            </div>
+                            <div class="question-item" data-modal-trigger role="button" tabindex="0">
+                                <h3>8. Discuss the Nature and Problems of Rating Scales.</h3>
+                                <ul>
+                                    <li>a) Describe the psychological basis of rating scales.</li>
+                                    <li>b) Explain various errors such as the halo effect, leniency, and central tendency.</li>
+                                    <li>c) Suggest steps to minimize these errors in applied settings.</li>
+                                </ul>
+                                <span class="icon">📝</span>
+                            </div>
+                            <div class="question-item" data-modal-trigger role="button" tabindex="0">
+                                <h3>9. Describe the major Forms of Rating Scales.</h3>
+                                <ul>
+                                    <li>a) Explain numerical, graphic, descriptive, checklist, and forced-choice formats.</li>
+                                    <li>b) Discuss their relevance to measurement of attitudes, behavior, and performance.</li>
+                                    <li>c) Evaluate how scale format choice impacts data reliability and interpretability.</li>
+                                </ul>
+                                <span class="icon">📝</span>
+                            </div>
+                            <div class="question-item" data-modal-trigger role="button" tabindex="0">
+                                <h3>10. Explain selected Tools of Data Collection in psychological research.</h3>
+                                <ul>
+                                    <li>a) Define sociometric techniques and describe how they reveal group structure and dynamics.</li>
+                                    <li>b) Outline key projective techniques such as TAT, Rorschach, and sentence completion tests.</li>
+                                </ul>
+                                <span class="icon">📝</span>
+                            </div>
+                            <div class="question-item" data-modal-trigger role="button" tabindex="0">
+                                <h3>11. Define projective techniques and explain their theoretical foundations.</h3>
+                                <ul>
+                                    <li>a) Discuss how projective tests differ from structured and objective personality measures.</li>
+                                    <li>b) Explain the role of ambiguity and projection in understanding the unconscious.</li>
+                                    <li>c) Illustrate with examples how projective tests can reveal hidden motives or conflicts.</li>
+                                </ul>
+                                <span class="icon">📝</span>
+                            </div>
+                            <div class="question-item" data-modal-trigger role="button" tabindex="0">
+                                <h3>12. Discuss the Thematic Apperception Test (TAT) and its use in exploring human motivation.</h3>
+                                <ul>
+                                    <li>a) Explain the process of stimulus presentation and story construction.</li>
+                                    <li>b) Describe how themes of achievement, power, and affiliation are analyzed.</li>
+                                    <li>c) Identify the test’s strengths, limitations, and contemporary adaptations.</li>
+                                </ul>
+                                <span class="icon">📝</span>
+                            </div>
+                            <div class="question-item" data-modal-trigger role="button" tabindex="0">
+                                <h3>13. Examine other major projective techniques used in clinical and research settings.</h3>
+                                <ul>
+                                    <li>a) Describe the Sentence Completion Test.</li>
+                                    <li>b) Evaluate the relevance of nonverbal projective tests in cross-cultural assessment.</li>
+                                </ul>
+                                <span class="icon">📝</span>
+                            </div>
+                            <div class="question-item" data-modal-trigger role="button" tabindex="0">
+                                <h3>14. Critically assess the role and current relevance of projective techniques in psychological assessment.</h3>
+                                <ul>
+                                    <li>a) Discuss the ethical and interpretive concerns associated with their use.</li>
+                                    <li>b) Compare projective tests with modern self-report and behavioral measures.</li>
+                                    <li>c) Propose how digital or computer-assisted projective tools could evolve in the future.</li>
+                                </ul>
+                                <span class="icon">📝</span>
+                            </div>
+                            
+                        </div> <!-- end vertical-question-list --></div>
+                </div>
+        
+                <!-- Unit-1 Content (Hidden) --><div id="unit-1-content" class="unit-content" hidden>
+                    <div class="content-inner">
+                        <h2 class="content-title">🌟 Unit-1 (BC) - Foundational Concepts</h2>
+                        <p>Content for Unit-1 will be added here. Stay tuned!</p>
+                    </div>
+                </div>
+        
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal Dialog --><div class="modal-overlay" id="coming-soon-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+        <div class="modal-dialog">
+            <button class="modal-close-btn" aria-label="Close dialog">
+                <!-- Close (X) SVG Icon --><svg fill="currentColor" viewBox="0 0 24 24" width="22px" height="22px"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"></path></svg>
+            </button>
+            <p id="modal-title">Content will be added soon. Please check back later. 🚀</p>
+        </div>
+    </div>
+
+
+    <script>
+        /* --- [Section 8: JavaScript Interactivity] ---
+          This script handles all the logic for tabs and modals.
+          It's written in clean, modern, vanilla JavaScript.
+        */
+        document.addEventListener('DOMContentLoaded', () => {
+
+            // --- Logic for Unit Selection (Tabs) ---
+            const unitSelectors = document.querySelectorAll('.unit-card');
+            const contentBlocks = document.querySelectorAll('.unit-content');
+            const contentArea = document.getElementById('content-display-area');
+
+            unitSelectors.forEach(selector => {
+                const targetId = selector.getAttribute('data-target');
+                const targetContent = document.getElementById(targetId);
+
+                // Click event
+                selector.addEventListener('click', () => {
+                    handleSelection(selector, targetContent);
+                });
+                
+                // Keyboard event (Enter/Space)
+                selector.addEventListener('keydown', (event) => {
+                    if (event.key === 'Enter' || event.key === ' ') {
+                        event.preventDefault(); // Stop space from scrolling
+                        handleSelection(selector, targetContent);
+                    }
+                });
+            });
+
+            function handleSelection(clickedSelector, targetContent) {
+                // Check if the clicked item is already active
+                const isAlreadyActive = clickedSelector.classList.contains('active');
+
+                // 1. Deactivate everything (all cards and content)
+                unitSelectors.forEach(s => {
+                    s.classList.remove('active');
+                    s.setAttribute('aria-expanded', 'false');
+                });
+                contentBlocks.forEach(block => {
+                    block.setAttribute('hidden', '');
+                });
+
+                // 2. If it was NOT active, activate it.
+                if (!isAlreadyActive) {
+                    clickedSelector.classList.add('active');
+                    clickedSelector.setAttribute('aria-expanded', 'true');
+                    
+                    if (targetContent) {
+                        targetContent.removeAttribute('hidden');
+                        // Scroll to the content area
+                        contentArea.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                }
+                // If it WAS active, step 1 already deactivated it, so it toggles off.
+            }
+
+
+            // --- Logic for "Coming Soon" Modal ---
+            const modalOverlay = document.getElementById('coming-soon-modal');
+            const modalTriggers = document.querySelectorAll('[data-modal-trigger]');
+            const modalCloseBtn = modalOverlay.querySelector('.modal-close-btn');
+
+            function openModal() {
+                modalOverlay.classList.add('visible');
+                modalCloseBtn.focus(); // Set focus to close button
+            }
+
+            function closeModal() {
+                modalOverlay.classList.remove('visible');
+            }
+
+            // Triggers for opening the modal (Q-3 to Q-14)
+            modalTriggers.forEach(trigger => {
+                // Click event
+                trigger.addEventListener('click', openModal);
+                
+                // Keyboard event (Enter/Space)
+                trigger.addEventListener('keydown', (event) => {
+                    if (event.key === 'Enter' || event.key === ' ') {
+                        event.preventDefault();
+                        openModal();
+                    }
+                });
+            });
+
+            // Close button
+            modalCloseBtn.addEventListener('click', closeModal);
+
+            // Close on overlay click
+            modalOverlay.addEventListener('click', (event) => {
+                if (event.target === modalOverlay) {
+                    closeModal();
+                }
+            });
+
+            // Close with "Escape" key
+            document.addEventListener('keydown', (event) => {
+                if (event.key === 'Escape' && modalOverlay.classList.contains('visible')) {
+                    closeModal();
+                }
+            });
+
+        });
+    </script>
+
+</body>
+</html>
+
