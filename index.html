@@ -7,29 +7,31 @@
     
     <style>
         /* --- [Section 1: CSS Variables & Theme] ---
-          NEW: Elegant, Dark, & Modern Aesthetic with Refined Glassmorphism.
+          NEW: "Light Academia" Theme - Professional, Clean, & Scholarly.
         */
         :root {
-            /* NEW: Richer, darker background gradient */
-            --bg-gradient: linear-gradient(135deg, #1e1e2d 0%, #2a2a4a 100%); 
+            /* NEW: Light, professional background */
+            --bg-gradient: linear-gradient(135deg, #f0f4f8 0%, #fdfdf6 100%); 
             
-            /* Subtler Glassmorphism for cards and containers */
-            --card-bg: rgba(255, 255, 255, 0.08); /* More transparent */
-            --card-bg-hover: rgba(255, 255, 255, 0.15); /* Slightly less transparent on hover */
-            --card-border: rgba(255, 255, 255, 0.15); /* Subtle white border */
-            --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.4); /* Deeper shadow */
+            /* Solid cards for a clean, professional look */
+            --card-bg: #ffffff;
+            --card-bg-hover: #ffffff;
+            --card-border: #e0e0e0;
+            --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); /* Softer shadow */
+            --card-shadow-hover: 0 6px 16px rgba(0, 0, 0, 0.12);
 
-            /* Elegant accent for highlights */
-            --accent-color: #00d2ff; /* Bright, clean cyan/blue */
-            --accent-glow: 0 0 25px 0 rgba(0, 210, 255, 0.5); /* Matching glow */
+            /* Elegant, academic blue accent */
+            --accent-color: #003366; /* Deep Oxford Blue */
+            --accent-glow: 0 0 20px rgba(0, 51, 102, 0.2); /* Subtle glow */
             
-            /* Text colors optimized for dark background */
-            --text-primary: #f0f0f0;   /* Light grey for main text */
-            --text-secondary: #c0c0c0; /* Slightly darker grey for subtext */
+            /* Text colors for readability */
+            --text-primary: #222222;   /* Dark grey for main text */
+            --text-secondary: #555555; /* Lighter grey for subtext */
             
             /* Transitions for smooth interactions */
             --transition-fast: all 0.2s ease-in-out;
             --transition-smooth: all 0.3s ease-in-out;
+            --transition-accordion: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         /* --- [Section 2: Global Styles] --- */
@@ -45,7 +47,7 @@
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
             margin: 0;
-            background-color: #1e1e2d; /* Fallback color */
+            background-color: #f0f4f8; /* Fallback color */
             background-image: var(--bg-gradient);
             background-attachment: fixed;
             color: var(--text-primary);
@@ -57,9 +59,8 @@
         .container {
             max-width: 1100px;
             margin: 0 auto;
-            background: var(--card-bg); /* Use card-bg for main container */
-            backdrop-filter: blur(12px); /* Slightly stronger blur */
-            -webkit-backdrop-filter: blur(12px);
+            background: var(--card-bg); /* Solid white container */
+            /* REMOVED backdrop-filter */
             border-radius: 20px;
             border: 1px solid var(--card-border);
             padding: 2.5rem; /* More generous padding */
@@ -70,11 +71,20 @@
             font-size: 2.8rem; /* Even larger, more impactful */
             font-weight: 700;
             padding-bottom: 1.2rem;
-            margin: 0 0 2.5rem 0; /* More spacing */
+            margin: 0 0 1rem 0; /* Reduced bottom margin */
             border-bottom: 2px solid var(--accent-color);
-            text-shadow: 0 3px 6px rgba(0,0,0,0.3);
+            text-shadow: none; /* Removed shadow */
             letter-spacing: 0.05em; /* Subtle letter spacing */
-            color: var(--text-primary); /* Ensure header text is primary white */
+            color: var(--text-primary); /* Dark text */
+        }
+
+        /* NEW: Style for the sub-header note */
+        .sub-header-note {
+            text-align: center;
+            font-size: 1.1rem;
+            font-style: italic;
+            color: var(--text-secondary);
+            margin: -0.5rem 0 2.5rem 0; /* Positioned nicely */
         }
 
         h2 {
@@ -86,52 +96,76 @@
 
         /* --- [Section 4: Unit Selector Cards] --- */
         .unit-selector-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 1.8rem; /* Increased gap */
+            /* This is no longer a grid, but a simple flex column */
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem; /* Gap between cards */
             margin-bottom: 2rem; /* Space before content area */
         }
 
         .unit-card {
             background: var(--card-bg);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
+            /* REMOVED backdrop-filter */
             border-radius: 15px; /* More rounded */
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-            padding: 2.2rem 1.8rem; /* More padding */
+            box-shadow: var(--card-shadow);
+            /* REMOVED padding */
             border: 1px solid var(--card-border);
-            cursor: pointer;
+            /* REMOVED cursor: pointer; */
             transition: var(--transition-smooth);
             position: relative;
-            text-align: center;
-            display: flex; /* For emoji & text alignment */
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
+            /* REMOVED text-align: center; */
+            /* REMOVED display: flex; */
+            /* REMOVED flex-direction: column; */
+            /* REMOVED justify-content: center; */
+            /* REMOVED align-items: center; */
         }
         
-        .unit-card:hover {
-            transform: translateY(-10px) scale(1.03); /* More pronounced lift and scale */
-            box-shadow: var(--card-shadow);
-            background: var(--card-bg-hover);
+        /* The clickable header part of the card */
+        .unit-card-header {
+            padding: 2.2rem 1.8rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: var(--transition-fast);
+        }
+
+        .unit-card-header:hover {
+            background-color: rgba(0, 51, 102, 0.03); /* Subtle hover */
+        }
+
+        .unit-card-title {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem; /* Space between emoji and title */
         }
 
         .unit-card .emoji {
             font-size: 2.8rem; /* Large emoji */
-            margin-bottom: 0.8rem;
+            margin-bottom: 0; /* Removed margin */
             line-height: 1;
+        }
+
+        /* NEW: Toggle icon for accordion */
+        .toggle-icon {
+            font-size: 1.5rem;
+            color: var(--accent-color);
+            transition: transform 0.3s ease;
+            transform-origin: center;
         }
 
         /* Style for the "active" selected card */
         .unit-card.active {
             box-shadow: var(--accent-glow), var(--card-shadow);
             border-color: var(--accent-color);
-            transform: translateY(-5px) scale(1.01); /* Subtle lift, not too high */
-            background: var(--card-bg-hover);
+        }
+
+        .unit-card.active .toggle-icon {
+            transform: rotate(180deg); /* Flip arrow */
         }
 
         /* Accessibility: Focus visible state */
-        .unit-card:focus-visible,
+        .unit-card-header:focus-visible, /* Focus on header */
         .question-item[role="button"]:focus-visible,
         .modal-close-btn:focus-visible,
         a.question-item:focus-visible { /* Also for question links */
@@ -141,42 +175,32 @@
         }
 
         /* --- [Section 5: Content Display Area] --- */
-        .content-area {
-            margin-top: 3rem; /* More separation */
-        }
+        /* REMOVED .content-area class */
         
-        .unit-content[hidden] {
-            display: none;
-        }
-
+        /* This is now the expandable content *inside* the card */
         .unit-content {
-            animation: fadeIn 0.4s ease-out forwards; /* More noticeable fade-in */
+            /* NEW: Accordion animation */
+            max-height: 0;
+            overflow: hidden;
+            transition: var(--transition-accordion);
+            /* REMOVED animation */
+        }
+        
+        .unit-content.open {
+            max-height: 5000px; /* Large value to allow expansion */
+            transition: max-height 1s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(25px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
+        /* This is the padding container *inside* the card */
         .content-inner {
-            background: var(--card-bg); /* Use card-bg for inner content block */
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border-radius: 15px;
-            box-shadow: var(--card-shadow);
+            background: #fdfdfd; /* Slightly different bg for content */
+            /* REMOVED shadow, radius, border */
             padding: 2.5rem 3rem;
-            border: 1px solid var(--card-border);
+            border-top: 1px solid var(--card-border);
         }
         
-        .content-title {
-            font-size: 2.2rem; /* Consistent with main heading sub-level */
-            font-weight: 600;
-            color: var(--text-primary);
-            margin-top: 0;
-            margin-bottom: 2rem;
-            padding-bottom: 1.2rem;
-            border-bottom: 1px solid var(--accent-color);
-        }
+        /* This class is no longer used, styling moved to question-item h3 */
+        /* REMOVED .content-title */
 
         /* --- [Section 6: Vertical Question List (for Unit-2)] --- */
         .vertical-question-list {
@@ -186,8 +210,8 @@
         }
 
         .question-item {
-            background-color: rgba(255, 255, 255, 0.03); /* Very subtle, darker glass */
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background-color: #f9f9fd; /* Very light, clean blue/purple tint */
+            border: 1px solid var(--card-border);
             border-radius: 10px;
             padding: 1.5rem 2rem; /* More generous padding */
             transition: var(--transition-fast);
@@ -201,9 +225,9 @@
         .question-item:hover,
         .question-item:focus-visible {
             transform: translateY(-5px); /* Stronger lift */
-            box-shadow: 0 8px 20px rgba(0,0,0,0.3); /* Deeper shadow on hover */
+            box-shadow: var(--card-shadow-hover); /* Use hover shadow */
             border-color: var(--accent-color);
-            background-color: rgba(255, 255, 255, 0.08); /* Slightly brighter glass on hover */
+            background-color: #ffffff; /* Brighten on hover */
         }
 
         /* Make modal-trigger items look clickable */
@@ -216,6 +240,7 @@
             font-weight: 600;
             margin: 0 0 0.8rem 0;
             padding-right: 30px; /* Space for icon */
+            color: var(--accent-color); /* Make title the accent color */
         }
 
         .question-item ul {
@@ -249,7 +274,7 @@
             position: fixed;
             inset: 0;
             background-color: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(10px); /* Stronger blur for modal overlay */
+            backdrop-filter: blur(10px); /* Keep blur for modal focus */
             -webkit-backdrop-filter: blur(10px);
             display: flex;
             align-items: center;
@@ -266,7 +291,7 @@
         }
 
         .modal-dialog {
-            background: linear-gradient(135deg, #3a3a5a, #4a4a7a); /* Darker, richer modal background */
+            background: #ffffff; /* Solid white modal */
             border-radius: 20px;
             padding: 3rem;
             width: 90%;
@@ -287,7 +312,7 @@
             margin: 0;
             font-size: 1.2rem; /* Larger and clearer message */
             line-height: 1.6;
-            color: var(--text-primary);
+            color: var(--text-primary); /* Dark text */
             font-weight: 500;
         }
 
@@ -295,22 +320,22 @@
             position: absolute;
             top: 1.2rem;
             right: 1.2rem;
-            background: rgba(255, 255, 255, 0.15);
+            background: #f0f0f0; /* Light grey background */
             border: none;
             cursor: pointer;
             padding: 0.6rem;
             border-radius: 50%;
-            color: var(--text-primary);
+            color: var(--text-secondary); /* Grey icon */
             transition: var(--transition-fast);
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
 
         .modal-close-btn:hover {
             background-color: var(--accent-color);
-            color: #1e1e2d; /* Dark text on accent hover */
+            color: #ffffff; /* White text on accent hover */
             transform: rotate(180deg) scale(1.1); /* Spin and grow slightly */
         }
 
@@ -377,6 +402,7 @@
                 font-size: 1.1rem;
                 margin-bottom: 0.5rem;
                 padding-right: 25px;
+                color: var(--accent-color); /* Ensure mobile title is also accent */
             }
 
             .question-item .icon {
@@ -401,176 +427,198 @@
 
     <div class="container">
         <!-- Page Header --><header>
-            <h1>✨ Core-2 Dashboard ✨</h1>
+            <h1>Core-2 Dashboard</h1>
         </header>
 
+        <!-- NEW: Sub-header Note -->
+        <p class="sub-header-note">These are the notes for the respective units.</p>
+
         <main>
-            <!-- Unit Selector Cards --><div class="unit-selector-grid">
+            <!-- Unit Selector Cards -->
+            <div class="unit-selector-grid">
 
-                <div class="unit-card" role="button" tabindex="0" data-target="unit-3-content" aria-controls="unit-3-content" aria-expanded="false">
-                    <span class="emoji">📚</span>
-                    <h2>Unit-3 (BP)</h2>
-                </div>
-
-                <div class="unit-card" role="button" tabindex="0" data-target="unit-2-content" aria-controls="unit-2-content" aria-expanded="false">
-                    <span class="emoji">🧠</span>
-                    <h2>Unit-2 (KG)</h2>
-                </div>
-
-                <div class="unit-card" role="button" tabindex="0" data-target="unit-1-content" aria-controls="unit-1-content" aria-expanded="false">
-                    <span class="emoji">🌟</span>
-                    <h2>Unit-1 (BC)</h2>
-                </div>
-                
-            </div>
-
-            <!-- Content Display Area --><div id="content-display-area" class="content-area">
-                
-                <!-- Unit-3 Content (Hidden) --><div id="unit-3-content" class="unit-content" hidden>
-                    <div class="content-inner">
-                        <h2 class="content-title">📚 Unit-3 (BP)</h2>
-                        <p>Content for Unit-3 will be added here. Stay tuned!</p>
+                <!-- Unit 3 Card -->
+                <div class="unit-card" data-target="unit-3-content">
+                    <div class="unit-card-header" role="button" tabindex="0" aria-controls="unit-3-content" aria-expanded="false">
+                        <div class="unit-card-title">
+                            <span class="emoji">📚</span>
+                            <h2>Unit-3 (BP)</h2>
+                        </div>
+                        <span class="toggle-icon">▼</span>
+                    </div>
+                    <!-- Unit 3 Content (Hidden) -->
+                    <div id="unit-3-content" class="unit-content">
+                        <div class="content-inner">
+                            <p>Content for Unit-3 will be added here. Stay tuned!</p>
+                        </div>
                     </div>
                 </div>
-        
-                <!-- Unit-2 Content (Hidden) --><div id="unit-2-content" class="unit-content" hidden>
-                    <div class="content-inner">
-                        <h2 class="content-title">🧠 Unit-2 (KG) - Psychological Measurement & Assessment</h2>
-                        
-                        <div class="vertical-question-list">
-                            
-                            <!-- Q-1: Link --><a href="https://c2-u2-q1.vercel.app/" target="_blank" rel="noopener noreferrer" class="question-item">
-                                <h3>1. Explain the Method of Equal Appearing Intervals.</h3>
-                                <ul>
-                                    <li>a) Outline the steps involved in constructing a scale using this method.</li>
-                                    <li>b) Discuss its assumptions and major advantages.</li>
-                                    <li>c) Critically evaluate its limitations with suitable psychological examples.</li>
-                                </ul>
-                                <span class="icon">🔗</span> <!-- Link icon --></a>
-                            
-                            <!-- Q-2: Link --><a href="https://c2-u2-q2.vercel.app/" target="_blank" rel="noopener noreferrer" class="question-item">
-                                <h3>2. Describe the Method of Summated Ratings (Likert Scale).</h3>
-                                <ul>
-                                    <li>a) Explain the process of item selection, scoring, and validation.</li>
-                                    <li>b) Differentiate between summated and equal-appearing interval scales.</li>
-                                    <li>c) Evaluate the reliability and practical utility of the Likert approach.</li>
-                                </ul>
-                                <span class="icon">🔗</span> <!-- Link icon --></a>
 
-                            <!-- Q-3: Modal Trigger --><div class="question-item" data-modal-trigger role="button" tabindex="0">
-                                <h3>3. Discuss the Method of Paired Comparisons.</h3>
-                                <ul>
-                                    <li>a) Describe how stimuli are compared and ranked in this method.</li>
-                                    <li>b) Explain the mathematical basis used to derive the scale values.</li>
-                                    <li>c) Indicate potential areas in psychology where this method is most effective.</li>
-                                </ul>
-                                <span class="icon">📝</span> <!-- Content icon --></div>
+                <!-- Unit 2 Card -->
+                <div class="unit-card" data-target="unit-2-content">
+                    <div class="unit-card-header" role="button" tabindex="0" aria-controls="unit-2-content" aria-expanded="false">
+                        <div class="unit-card-title">
+                            <span class="emoji">🧠</span>
+                            <h2>Unit-2 (KG)</h2>
+                        </div>
+                        <span class="toggle-icon">▼</span>
+                    </div>
+                    <!-- Unit 2 Content (Hidden) -->
+                    <div id="unit-2-content" class="unit-content">
+                        <div class="content-inner">
+                            <div class="vertical-question-list">
                             
-                            <!-- Q-4 to Q-14: Modal Triggers --><div class="question-item" data-modal-trigger role="button" tabindex="0">
-                                <h3>4. Elaborate on the Method of Successive Categories.</h3>
-                                <ul>
-                                    <li>a) Explain the conceptual framework and procedure of this scaling technique.</li>
-                                    <li>b) Compare it with the method of equal-appearing intervals.</li>
-                                    <li>c) Discuss how the categorization of stimuli affects data interpretation.</li>
-                                </ul>
-                                <span class="icon">📝</span>
-                            </div>
-                            <div class="question-item" data-modal-trigger role="button" tabindex="0">
-                                <h3>5. Analyze various Ranking Methods used in psychological measurement.</h3>
-                                <ul>
-                                    <li>a) Differentiate between simple ranking and comparative ranking.</li>
-                                    <li>b) Explain how ranking can be used to measure preferences and attitudes.</li>
-                                    <li>c) Discuss problems such as order effects and respondent fatigue.</li>
-                                </ul>
-                                <span class="icon">📝</span>
-                            </div>
-                            <div class="question-item" data-modal-trigger role="button" tabindex="0">
-                                <h3>6. Explain the use of the Semantic Differential and Q-Sort techniques.</h3>
-                                <ul>
-                                    <li>a) Describe the structure and interpretation of semantic differential scales.</li>
-                                    <li>b) Explain how Q-Sort is employed in personality and self-concept research.</li>
-                                    <li>c) Compare their psychometric strengths and weaknesses.</li>
-                                </ul>
-                                <span class="icon">📝</span>
-                            </div>
-                            <div class="question-item" data-modal-trigger role="button" tabindex="0">
-                                <h3>7. Critically discuss the common Problems and Evaluations of Scaling Methods.</h3>
-                                <ul>
-                                    <li>a) Identify general challenges faced during scaling (e.g., response bias, social desirability).</li>
-                                    <li>b) Discuss validity and reliability issues in attitude measurement.</li>
-                                    <li>c) Suggest strategies to enhance accuracy in psychological scaling.</li>
-                                </ul>
-                                <span class="icon">📝</span>
-                            </div>
-                            <div class="question-item" data-modal-trigger role="button" tabindex="0">
-                                <h3>8. Discuss the Nature and Problems of Rating Scales.</h3>
-                                <ul>
-                                    <li>a) Describe the psychological basis of rating scales.</li>
-                                    <li>b) Explain various errors such as the halo effect, leniency, and central tendency.</li>
-                                    <li>c) Suggest steps to minimize these errors in applied settings.</li>
-                                </ul>
-                                <span class="icon">📝</span>
-                            </div>
-                            <div class="question-item" data-modal-trigger role="button" tabindex="0">
-                                <h3>9. Describe the major Forms of Rating Scales.</h3>
-                                <ul>
-                                    <li>a) Explain numerical, graphic, descriptive, checklist, and forced-choice formats.</li>
-                                    <li>b) Discuss their relevance to measurement of attitudes, behavior, and performance.</li>
-                                    <li>c) Evaluate how scale format choice impacts data reliability and interpretability.</li>
-                                </ul>
-                                <span class="icon">📝</span>
-                            </div>
-                            <div class="question-item" data-modal-trigger role="button" tabindex="0">
-                                <h3>10. Explain selected Tools of Data Collection in psychological research.</h3>
-                                <ul>
-                                    <li>a) Define sociometric techniques and describe how they reveal group structure and dynamics.</li>
-                                    <li>b) Outline key projective techniques such as TAT, Rorschach, and sentence completion tests.</li>
-                                </ul>
-                                <span class="icon">📝</span>
-                            </div>
-                            <div class="question-item" data-modal-trigger role="button" tabindex="0">
-                                <h3>11. Define projective techniques and explain their theoretical foundations.</h3>
-                                <ul>
-                                    <li>a) Discuss how projective tests differ from structured and objective personality measures.</li>
-                                    <li>b) Explain the role of ambiguity and projection in understanding the unconscious.</li>
-                                    <li>c) Illustrate with examples how projective tests can reveal hidden motives or conflicts.</li>
-                                </ul>
-                                <span class="icon">📝</span>
-                            </div>
-                            <div class="question-item" data-modal-trigger role="button" tabindex="0">
-                                <h3>12. Discuss the Thematic Apperception Test (TAT) and its use in exploring human motivation.</h3>
-                                <ul>
-                                    <li>a) Explain the process of stimulus presentation and story construction.</li>
-                                    <li>b) Describe how themes of achievement, power, and affiliation are analyzed.</li>
-                                    <li>c) Identify the test’s strengths, limitations, and contemporary adaptations.</li>
-                                </ul>
-                                <span class="icon">📝</span>
-                            </div>
-                            <div class="question-item" data-modal-trigger role="button" tabindex="0">
-                                <h3>13. Examine other major projective techniques used in clinical and research settings.</h3>
-                                <ul>
-                                    <li>a) Describe the Sentence Completion Test.</li>
-                                    <li>b) Evaluate the relevance of nonverbal projective tests in cross-cultural assessment.</li>
-                                </ul>
-                                <span class="icon">📝</span>
-                            </div>
-                            <div class="question-item" data-modal-trigger role="button" tabindex="0">
-                                <h3>14. Critically assess the role and current relevance of projective techniques in psychological assessment.</h3>
-                                <ul>
-                                    <li>a) Discuss the ethical and interpretive concerns associated with their use.</li>
-                                    <li>b) Compare projective tests with modern self-report and behavioral measures.</li>
-                                    <li>c) Propose how digital or computer-assisted projective tools could evolve in the future.</li>
-                                </ul>
-                                <span class="icon">📝</span>
-                            </div>
-                            
-                        </div> <!-- end vertical-question-list --></div>
+                                <!-- Q-1: Link -->
+                                <a href="https://c2-u2-q1.vercel.app/" target="_blank" rel="noopener noreferrer" class="question-item">
+                                    <h3>1. Explain the Method of Equal Appearing Intervals.</h3>
+                                    <ul>
+                                        <li>a) Outline the steps involved in constructing a scale using this method.</li>
+                                        <li>b) Discuss its assumptions and major advantages.</li>
+                                        <li>c) Critically evaluate its limitations with suitable psychological examples.</li>
+                                    </ul>
+                                    <span class="icon">🔗</span> <!-- Link icon -->
+                                </a>
+                                
+                                <!-- Q-2: Link -->
+                                <a href="https://c2-u2-q2.vercel.app/" target="_blank" rel="noopener noreferrer" class="question-item">
+                                    <h3>2. Describe the Method of Summated Ratings (Likert Scale).</h3>
+                                    <ul>
+                                        <li>a) Explain the process of item selection, scoring, and validation.</li>
+                                        <li>b) Differentiate between summated and equal-appearing interval scales.</li>
+                                        <li>c) Evaluate the reliability and practical utility of the Likert approach.</li>
+                                    </ul>
+                                    <span class="icon">🔗</span> <!-- Link icon -->
+                                </a>
+    
+                                <!-- Q-3: Modal Trigger -->
+                                <div class="question-item" data-modal-trigger role="button" tabindex="0">
+                                    <h3>3. Discuss the Method of Paired Comparisons.</h3>
+                                    <ul>
+                                        <li>a) Describe how stimuli are compared and ranked in this method.</li>
+                                        <li>b) Explain the mathematical basis used to derive the scale values.</li>
+                                        <li>c) Indicate potential areas in psychology where this method is most effective.</li>
+                                    </ul>
+                                    <span class="icon">📝</span> <!-- Content icon -->
+                                </div>
+                                
+                                <!-- Q-4 to Q-14: Modal Triggers -->
+                                <div class="question-item" data-modal-trigger role="button" tabindex="0">
+                                    <h3>4. Elaborate on the Method of Successive Categories.</h3>
+                                    <ul>
+                                        <li>a) Explain the conceptual framework and procedure of this scaling technique.</li>
+                                        <li>b) Compare it with the method of equal-appearing intervals.</li>
+                                        <li>c) Discuss how the categorization of stimuli affects data interpretation.</li>
+                                    </ul>
+                                    <span class="icon">📝</span>
+                                </div>
+                                <div class="question-item" data-modal-trigger role="button" tabindex="0">
+                                    <h3>5. Analyze various Ranking Methods used in psychological measurement.</h3>
+                                    <ul>
+                                        <li>a) Differentiate between simple ranking and comparative ranking.</li>
+                                        <li>b) Explain how ranking can be used to measure preferences and attitudes.</li>
+                                        <li>c) Discuss problems such as order effects and respondent fatigue.</li>
+                                    </ul>
+                                    <span class="icon">📝</span>
+                                </div>
+                                <div class="question-item" data-modal-trigger role="button" tabindex="0">
+                                    <h3>6. Explain the use of the Semantic Differential and Q-Sort techniques.</h3>
+                                    <ul>
+                                        <li>a) Describe the structure and interpretation of semantic differential scales.</li>
+                                        <li>b) Explain how Q-Sort is employed in personality and self-concept research.</li>
+                                        <li>c) Compare their psychometric strengths and weaknesses.</li>
+                                    </ul>
+                                    <span class="icon">📝</span>
+                                </div>
+                                <div class="question-item" data-modal-trigger role="button" tabindex="0">
+                                    <h3>7. Critically discuss the common Problems and Evaluations of Scaling Methods.</h3>
+                                    <ul>
+                                        <li>a) Identify general challenges faced during scaling (e.g., response bias, social desirability).</li>
+                                        <li>b) Discuss validity and reliability issues in attitude measurement.</li>
+                                        <li>c) Suggest strategies to enhance accuracy in psychological scaling.</li>
+                                    </ul>
+                                    <span class="icon">📝</span>
+                                </div>
+                                <div class="question-item" data-modal-trigger role="button" tabindex="0">
+                                    <h3>8. Discuss the Nature and Problems of Rating Scales.</h3>
+                                    <ul>
+                                        <li>a) Describe the psychological basis of rating scales.</li>
+                                        <li>b) Explain various errors such as the halo effect, leniency, and central tendency.</li>
+                                        <li>c) Suggest steps to minimize these errors in applied settings.</li>
+                                    </ul>
+                                    <span class="icon">📝</span>
+                                </div>
+                                <div class="question-item" data-modal-trigger role="button" tabindex="0">
+                                    <h3>9. Describe the major Forms of Rating Scales.</h3>
+                                    <ul>
+                                        <li>a) Explain numerical, graphic, descriptive, checklist, and forced-choice formats.</li>
+                                        <li>b) Discuss their relevance to measurement of attitudes, behavior, and performance.</li>
+                                        <li>c) Evaluate how scale format choice impacts data reliability and interpretability.</li>
+                                    </ul>
+                                    <span class="icon">📝</span>
+                                </div>
+                                <div class="question-item" data-modal-trigger role="button" tabindex="0">
+                                    <h3>10. Explain selected Tools of Data Collection in psychological research.</h3>
+                                    <ul>
+                                        <li>a) Define sociometric techniques and describe how they reveal group structure and dynamics.</li>
+                                        <li>b) Outline key projective techniques such as TAT, Rorschach, and sentence completion tests.</li>
+                                    </ul>
+                                    <span class="icon">📝</span>
+                                </div>
+                                <div class="question-item" data-modal-trigger role="button" tabindex="0">
+                                    <h3>11. Define projective techniques and explain their theoretical foundations.</h3>
+                                    <ul>
+                                        <li>a) Discuss how projective tests differ from structured and objective personality measures.</li>
+                                        <li>b) Explain the role of ambiguity and projection in understanding the unconscious.</li>
+                                        <li>c) Illustrate with examples how projective tests can reveal hidden motives or conflicts.</li>
+                                    </ul>
+                                    <span class="icon">📝</span>
+                                </div>
+                                <div class="question-item" data-modal-trigger role="button" tabindex="0">
+                                    <h3>12. Discuss the Thematic Apperception Test (TAT) and its use in exploring human motivation.</h3>
+                                    <ul>
+                                        <li>a) Explain the process of stimulus presentation and story construction.</li>
+                                        <li>b) Describe how themes of achievement, power, and affiliation are analyzed.</li>
+                                        <li>c) Identify the test’s strengths, limitations, and contemporary adaptations.</li>
+                                    </ul>
+                                    <span class="icon">📝</span>
+                                </div>
+                                <div class="question-item" data-modal-trigger role="button" tabindex="0">
+                                    <h3>13. Examine other major projective techniques used in clinical and research settings.</h3>
+                                    <ul>
+                                        <li>a) Describe the Sentence Completion Test.</li>
+                                        <li>b) Evaluate the relevance of nonverbal projective tests in cross-cultural assessment.</li>
+                                    </ul>
+                                    <span class="icon">📝</span>
+                                </div>
+                                <div class="question-item" data-modal-trigger role="button" tabindex="0">
+                                    <h3>14. Critically assess the role and current relevance of projective techniques in psychological assessment.</h3>
+                                    <ul>
+                                        <li>a) Discuss the ethical and interpretive concerns associated with their use.</li>
+                                        <li>b) Compare projective tests with modern self-report and behavioral measures.</li>
+                                        <li>c) Propose how digital or computer-assisted projective tools could evolve in the future.</li>
+                                    </ul>
+                                    <span class="icon">📝</span>
+                                </div>
+                                
+                            </div> <!-- end vertical-question-list -->
+                        </div>
+                    </div>
                 </div>
-        
-                <!-- Unit-1 Content (Hidden) --><div id="unit-1-content" class="unit-content" hidden>
-                    <div class="content-inner">
-                        <h2 class="content-title">🌟 Unit-1 (BC) - Foundational Concepts</h2>
-                        <p>Content for Unit-1 will be added here. Stay tuned!</p>
+
+                <!-- Unit 1 Card -->
+                <div class="unit-card" data-target="unit-1-content">
+                    <div class="unit-card-header" role="button" tabindex="0" aria-controls="unit-1-content" aria-expanded="false">
+                        <div class="unit-card-title">
+                            <span class="emoji">🌟</span>
+                            <h2>Unit-1 (BC)</h2>
+                        </div>
+                        <span class="toggle-icon">▼</span>
+                    </div>
+                    <!-- Unit 1 Content (Hidden) -->
+                    <div id="unit-1-content" class="unit-content">
+                        <div class="content-inner">
+                            <p>Content for Unit-1 will be added here. Stay tuned!</p>
+                        </div>
                     </div>
                 </div>
         
@@ -578,11 +626,8 @@
         </main>
     </div>
 
-    <!-- Modal Dialog --><div class="modal-overlay" id="coming-soon-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
-        <div class="modal-dialog">
-            <button class="modal-close-btn" aria-label="Close dialog">
-                <!-- Close (X) SVG Icon --><svg fill="currentColor" viewBox="0 0 24 24" width="22px" height="22px"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"></path></svg>
-            </button>
+    <!-- Modal Dialog -->
+    <div class="modal-overlay" id="coming-soon-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
             <p id="modal-title">Content will be added soon. Please check back later. 🚀</p>
         </div>
     </div>
@@ -590,59 +635,49 @@
 
     <script>
         /* --- [Section 8: JavaScript Interactivity] ---
-          This script handles all the logic for tabs and modals.
-          It's written in clean, modern, vanilla JavaScript.
+          NEW: Accordion Logic
         */
         document.addEventListener('DOMContentLoaded', () => {
 
-            // --- Logic for Unit Selection (Tabs) ---
-            const unitSelectors = document.querySelectorAll('.unit-card');
-            const contentBlocks = document.querySelectorAll('.unit-content');
-            const contentArea = document.getElementById('content-display-area');
-
-            unitSelectors.forEach(selector => {
-                const targetId = selector.getAttribute('data-target');
-                const targetContent = document.getElementById(targetId);
-
+            // --- Logic for Unit Selection (Accordion) ---
+            const unitCardHeaders = document.querySelectorAll('.unit-card-header');
+            const allUnitCards = document.querySelectorAll('.unit-card');
+            
+            unitCardHeaders.forEach(header => {
+                
                 // Click event
-                selector.addEventListener('click', () => {
-                    handleSelection(selector, targetContent);
+                header.addEventListener('click', () => {
+                    toggleAccordion(header);
                 });
                 
                 // Keyboard event (Enter/Space)
-                selector.addEventListener('keydown', (event) => {
+                header.addEventListener('keydown', (event) => {
                     if (event.key === 'Enter' || event.key === ' ') {
                         event.preventDefault(); // Stop space from scrolling
-                        handleSelection(selector, targetContent);
+                        toggleAccordion(header);
                     }
                 });
             });
 
-            function handleSelection(clickedSelector, targetContent) {
-                // Check if the clicked item is already active
-                const isAlreadyActive = clickedSelector.classList.contains('active');
+            function toggleAccordion(clickedHeader) {
+                const parentCard = clickedHeader.parentElement;
+                const content = parentCard.querySelector('.unit-content');
+                const isAlreadyOpen = parentCard.classList.contains('active');
 
-                // 1. Deactivate everything (all cards and content)
-                unitSelectors.forEach(s => {
-                    s.classList.remove('active');
-                    s.setAttribute('aria-expanded', 'false');
-                });
-                contentBlocks.forEach(block => {
-                    block.setAttribute('hidden', '');
+                // 1. Close all cards first
+                allUnitCards.forEach(card => {
+                    card.classList.remove('active');
+                    card.querySelector('.unit-card-header').setAttribute('aria-expanded', 'false');
+                    card.querySelector('.unit-content').classList.remove('open');
                 });
 
-                // 2. If it was NOT active, activate it.
-                if (!isAlreadyActive) {
-                    clickedSelector.classList.add('active');
-                    clickedSelector.setAttribute('aria-expanded', 'true');
-                    
-                    if (targetContent) {
-                        targetContent.removeAttribute('hidden');
-                        // Scroll to the content area
-                        contentArea.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                    }
+                // 2. If the clicked card was not already open, open it.
+                if (!isAlreadyOpen) {
+                    parentCard.classList.add('active');
+                    clickedHeader.setAttribute('aria-expanded', 'true');
+                    content.classList.add('open');
                 }
-                // If it WAS active, step 1 already deactivated it, so it toggles off.
+                // If it *was* open, step 1 already closed it, so it toggles shut.
             }
 
 
@@ -696,4 +731,6 @@
 
 </body>
 </html>
+
+
 
