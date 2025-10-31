@@ -3,740 +3,458 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Core-2 Dashboard</title>
+    <title>Psy Core Hub</title>
+    
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Load Poppins font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     
     <style>
-        /* --- [Section 1: CSS Variables & Theme] ---
-          NEW: "Light Academia" Theme - Professional, Clean, & Scholarly.
+        /* Custom style to apply the Poppins font family.
+          The rest of the styling is pure Tailwind.
+          We also add a smooth transition for the view's opacity.
         */
-        :root {
-            /* NEW: Light, professional background */
-            --bg-gradient: linear-gradient(135deg, #f0f4f8 0%, #fdfdf6 100%); 
-            
-            /* Solid cards for a clean, professional look */
-            --card-bg: #ffffff;
-            --card-bg-hover: #ffffff;
-            --card-border: #e0e0e0;
-            --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); /* Softer shadow */
-            --card-shadow-hover: 0 6px 16px rgba(0, 0, 0, 0.12);
-
-            /* Elegant, academic blue accent */
-            --accent-color: #003366; /* Deep Oxford Blue */
-            --accent-glow: 0 0 20px rgba(0, 51, 102, 0.2); /* Subtle glow */
-            
-            /* Text colors for readability */
-            --text-primary: #222222;   /* Dark grey for main text */
-            --text-secondary: #555555; /* Lighter grey for subtext */
-            
-            /* Transitions for smooth interactions */
-            --transition-fast: all 0.2s ease-in-out;
-            --transition-smooth: all 0.3s ease-in-out;
-            --transition-accordion: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        /* --- [Section 2: Global Styles] --- */
-        html {
-            box-sizing: border-box;
-            scroll-behavior: smooth;
-        }
-
-        *, *:before, *:after {
-            box-sizing: inherit;
-        }
-
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            margin: 0;
-            background-color: #f0f4f8; /* Fallback color */
-            background-image: var(--bg-gradient);
-            background-attachment: fixed;
-            color: var(--text-primary);
-            padding: 1.5rem;
-            min-height: 100vh;
-        }
-
-        /* --- [Section 3: Layout & Typography] --- */
-        .container {
-            max-width: 1100px;
-            margin: 0 auto;
-            background: var(--card-bg); /* Solid white container */
-            /* REMOVED backdrop-filter */
-            border-radius: 20px;
-            border: 1px solid var(--card-border);
-            padding: 2.5rem; /* More generous padding */
-            box-shadow: var(--card-shadow);
-        }
-
-        h1 {
-            font-size: 2.8rem; /* Even larger, more impactful */
-            font-weight: 700;
-            padding-bottom: 1.2rem;
-            margin: 0 0 1rem 0; /* Reduced bottom margin */
-            border-bottom: 2px solid var(--accent-color);
-            text-shadow: none; /* Removed shadow */
-            letter-spacing: 0.05em; /* Subtle letter spacing */
-            color: var(--text-primary); /* Dark text */
-        }
-
-        /* NEW: Style for the sub-header note */
-        .sub-header-note {
-            text-align: center;
-            font-size: 1.1rem;
-            font-style: italic;
-            color: var(--text-secondary);
-            margin: -0.5rem 0 2.5rem 0; /* Positioned nicely */
-        }
-
-        h2 {
-            font-size: 1.6rem; /* More prominent */
-            font-weight: 600;
-            margin: 0;
-            color: var(--text-primary);
-        }
-
-        /* --- [Section 4: Unit Selector Cards] --- */
-        .unit-selector-grid {
-            /* This is no longer a grid, but a simple flex column */
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem; /* Gap between cards */
-            margin-bottom: 2rem; /* Space before content area */
-        }
-
-        .unit-card {
-            background: var(--card-bg);
-            /* REMOVED backdrop-filter */
-            border-radius: 15px; /* More rounded */
-            box-shadow: var(--card-shadow);
-            /* REMOVED padding */
-            border: 1px solid var(--card-border);
-            /* REMOVED cursor: pointer; */
-            transition: var(--transition-smooth);
-            position: relative;
-            /* REMOVED text-align: center; */
-            /* REMOVED display: flex; */
-            /* REMOVED flex-direction: column; */
-            /* REMOVED justify-content: center; */
-            /* REMOVED align-items: center; */
+            font-family: 'Poppins', sans-serif;
+            /* Smooth transition for body background color changes */
+            transition: background-color 0.4s ease;
         }
         
-        /* The clickable header part of the card */
-        .unit-card-header {
-            padding: 2.2rem 1.8rem;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            transition: var(--transition-fast);
+        .view {
+            /* All views are hidden by default */
+            display: none;
+            /* Fade-in animation */
+            animation: fadeIn 0.5s ease forwards;
         }
 
-        .unit-card-header:hover {
-            background-color: rgba(0, 51, 102, 0.03); /* Subtle hover */
-        }
-
-        .unit-card-title {
-            display: flex;
-            align-items: center;
-            gap: 1.5rem; /* Space between emoji and title */
-        }
-
-        .unit-card .emoji {
-            font-size: 2.8rem; /* Large emoji */
-            margin-bottom: 0; /* Removed margin */
-            line-height: 1;
-        }
-
-        /* NEW: Toggle icon for accordion */
-        .toggle-icon {
-            font-size: 1.5rem;
-            color: var(--accent-color);
-            transition: transform 0.3s ease;
-            transform-origin: center;
-        }
-
-        /* Style for the "active" selected card */
-        .unit-card.active {
-            box-shadow: var(--accent-glow), var(--card-shadow);
-            border-color: var(--accent-color);
-        }
-
-        .unit-card.active .toggle-icon {
-            transform: rotate(180deg); /* Flip arrow */
-        }
-
-        /* Accessibility: Focus visible state */
-        .unit-card-header:focus-visible, /* Focus on header */
-        .question-item[role="button"]:focus-visible,
-        .modal-close-btn:focus-visible,
-        a.question-item:focus-visible { /* Also for question links */
-            outline: 3px solid var(--accent-color);
-            outline-offset: 4px; /* More offset */
-            border-radius: 15px; /* Match card border radius */
-        }
-
-        /* --- [Section 5: Content Display Area] --- */
-        /* REMOVED .content-area class */
-        
-        /* This is now the expandable content *inside* the card */
-        .unit-content {
-            /* NEW: Accordion animation */
-            max-height: 0;
-            overflow: hidden;
-            transition: var(--transition-accordion);
-            /* REMOVED animation */
-        }
-        
-        .unit-content.open {
-            max-height: 5000px; /* Large value to allow expansion */
-            transition: max-height 1s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        /* This is the padding container *inside* the card */
-        .content-inner {
-            background: #fdfdfd; /* Slightly different bg for content */
-            /* REMOVED shadow, radius, border */
-            padding: 2.5rem 3rem;
-            border-top: 1px solid var(--card-border);
-        }
-        
-        /* This class is no longer used, styling moved to question-item h3 */
-        /* REMOVED .content-title */
-
-        /* --- [Section 6: Vertical Question List (for Unit-2)] --- */
-        .vertical-question-list {
-            display: flex;
-            flex-direction: column;
-            gap: 1.2rem; /* Slightly larger gap */
-        }
-
-        .question-item {
-            background-color: #f9f9fd; /* Very light, clean blue/purple tint */
-            border: 1px solid var(--card-border);
-            border-radius: 10px;
-            padding: 1.5rem 2rem; /* More generous padding */
-            transition: var(--transition-fast);
-            text-decoration: none;
-            color: var(--text-primary);
-            display: block;
-            position: relative; /* For icon positioning */
-        }
-
-        /* Add hover/focus for all interactive items */
-        .question-item:hover,
-        .question-item:focus-visible {
-            transform: translateY(-5px); /* Stronger lift */
-            box-shadow: var(--card-shadow-hover); /* Use hover shadow */
-            border-color: var(--accent-color);
-            background-color: #ffffff; /* Brighten on hover */
-        }
-
-        /* Make modal-trigger items look clickable */
-        .question-item[data-modal-trigger] {
-            cursor: pointer;
-        }
-
-        .question-item h3 {
-            font-size: 1.3rem; /* Larger question title */
-            font-weight: 600;
-            margin: 0 0 0.8rem 0;
-            padding-right: 30px; /* Space for icon */
-            color: var(--accent-color); /* Make title the accent color */
-        }
-
-        .question-item ul {
-            list-style-type: lower-alpha;
-            margin: 0;
-            padding-left: 25px; /* Indent for list items */
-            font-size: 1rem; /* Slightly larger list text */
-            line-height: 1.6;
-            color: var(--text-secondary);
-        }
-        
-        .question-item li {
-            margin-bottom: 0.3rem;
-        }
-
-        .question-item .icon {
-            position: absolute;
-            top: 1.5rem;
-            right: 1.5rem;
-            font-size: 1.2rem;
-            color: var(--accent-color);
-            transition: transform 0.2s ease-out;
-        }
-
-        .question-item:hover .icon {
-            transform: scale(1.1);
-        }
-
-        /* --- [Section 7: Modal Dialog] --- */
-        .modal-overlay {
-            position: fixed;
-            inset: 0;
-            background-color: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(10px); /* Keep blur for modal focus */
-            -webkit-backdrop-filter: blur(10px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.3s ease, visibility 0.3s;
-            z-index: 1000;
-        }
-
-        .modal-overlay.visible {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .modal-dialog {
-            background: #ffffff; /* Solid white modal */
-            border-radius: 20px;
-            padding: 3rem;
-            width: 90%;
-            max-width: 550px; /* Wider modal */
-            box-shadow: var(--card-shadow);
-            position: relative;
-            transform: scale(0.8) translateY(50px); /* More dramatic entrance */
-            transition: transform 0.4s cubic-bezier(0.3, 0.7, 0.4, 1.2); /* Bouncier transition */
-            border: 1px solid var(--card-border);
-            text-align: center;
-        }
-
-        .modal-overlay.visible .modal-dialog {
-            transform: scale(1) translateY(0);
-        }
-
-        .modal-dialog p {
-            margin: 0;
-            font-size: 1.2rem; /* Larger and clearer message */
-            line-height: 1.6;
-            color: var(--text-primary); /* Dark text */
-            font-weight: 500;
-        }
-
-        .modal-close-btn {
-            position: absolute;
-            top: 1.2rem;
-            right: 1.2rem;
-            background: #f0f0f0; /* Light grey background */
-            border: none;
-            cursor: pointer;
-            padding: 0.6rem;
-            border-radius: 50%;
-            color: var(--text-secondary); /* Grey icon */
-            transition: var(--transition-fast);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-
-        .modal-close-btn:hover {
-            background-color: var(--accent-color);
-            color: #ffffff; /* White text on accent hover */
-            transform: rotate(180deg) scale(1.1); /* Spin and grow slightly */
-        }
-
-        .modal-close-btn svg {
-            width: 22px; /* Slightly larger icon */
-            height: 22px;
+        .view.active {
+            /* Active view is displayed */
             display: block;
         }
 
-        /* --- Media Queries for Responsiveness --- */
-        @media (max-width: 768px) {
-            body {
-                padding: 1rem;
-            }
-
-            .container {
-                padding: 1.5rem;
-                border-radius: 15px;
-            }
-
-            h1 {
-                font-size: 2rem;
-                margin-bottom: 1.5rem;
-            }
-
-            .unit-selector-grid {
-                grid-template-columns: 1fr; /* Stack on smaller screens */
-                gap: 1rem;
-            }
-
-            .unit-card {
-                padding: 1.5rem;
-                border-radius: 10px;
-            }
-
-            .unit-card:hover {
-                transform: translateY(-5px) scale(1.01);
-            }
-
-            .content-area {
-                margin-top: 2rem;
-            }
-
-            .content-inner {
-                padding: 1.5rem;
-                border-radius: 10px;
-            }
-
-            .content-title {
-                font-size: 1.8rem;
-                margin-bottom: 1.5rem;
-            }
-
-            .vertical-question-list {
-                gap: 0.8rem;
-            }
-
-            .question-item {
-                padding: 1rem 1.2rem;
-                border-radius: 8px;
-            }
-
-            .question-item h3 {
-                font-size: 1.1rem;
-                margin-bottom: 0.5rem;
-                padding-right: 25px;
-                color: var(--accent-color); /* Ensure mobile title is also accent */
-            }
-
-            .question-item .icon {
-                top: 1rem;
-                right: 1rem;
-                font-size: 1rem;
-            }
-
-            .modal-dialog {
-                padding: 2rem;
-            }
-
-            .modal-dialog p {
-                font-size: 1rem;
-            }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-
+        
+        /* Custom modal animations */
+        @keyframes fadeInModal {
+            from { background-color: rgba(0, 0, 0, 0); }
+            to { background-color: rgba(0, 0, 0, 0.5); }
+        }
+        @keyframes slideInModal {
+            from { transform: translateY(-30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        .modal-open {
+            animation: fadeInModal 0.3s ease;
+        }
+        .modal-content-open {
+            animation: slideInModal 0.3s ease;
+        }
+        
     </style>
-    <!-- Optional: Link to Google Fonts for 'Inter' if you want to use it, otherwise default sans-serif will be used --><link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+      // Custom Tailwind configuration
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              // Custom colors for Q cards
+              'q1-color': '#E6F7EE',
+              'q2-color': '#E0F2F1',
+              'q3-color': '#D6F5E3',
+              'q4-color': '#E6F3FF',
+              'q5-color': '#EBF7E3',
+               // Light background for Core-1/2 cards on main hub
+              'core-card-blue-light': '#DDEBFF',
+              'core-card-green-light': '#E6F7EE',
+              // New distinct colors for available content
+              'unit-box-1': '#E6F3FF', // light blue
+              'unit-box-2': '#E6F7EE', // light green
+              'unit-box-3': '#F2E6FF', // light purple
+            }
+          }
+        }
+      }
+    </script>
 </head>
-<body>
+<body class="bg-gradient-to-br from-slate-50 to-indigo-50 min-h-screen"> 
 
-    <div class="container">
-        <!-- Page Header --><header>
-            <h1>Core-2 Dashboard</h1>
-        </header>
-
-        <!-- NEW: Sub-header Note -->
-        <p class="sub-header-note">These are the notes for the respective units.</p>
-
-        <main>
-            <!-- Unit Selector Cards -->
-            <div class="unit-selector-grid">
-
-                <!-- Unit 3 Card -->
-                <div class="unit-card" data-target="unit-3-content">
-                    <div class="unit-card-header" role="button" tabindex="0" aria-controls="unit-3-content" aria-expanded="false">
-                        <div class="unit-card-title">
-                            <span class="emoji">📚</span>
-                            <h2>Unit-3 (BP)</h2>
-                        </div>
-                        <span class="toggle-icon">▼</span>
-                    </div>
-                    <!-- Unit 3 Content (Hidden) -->
-                    <div id="unit-3-content" class="unit-content">
-                        <div class="content-inner">
-                            <p>Content for Unit-3 will be added here. Stay tuned!</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Unit 2 Card -->
-                <div class="unit-card" data-target="unit-2-content">
-                    <div class="unit-card-header" role="button" tabindex="0" aria-controls="unit-2-content" aria-expanded="false">
-                        <div class="unit-card-title">
-                            <span class="emoji">🧠</span>
-                            <h2>Unit-2 (KG)</h2>
-                        </div>
-                        <span class="toggle-icon">▼</span>
-                    </div>
-                    <!-- Unit 2 Content (Hidden) -->
-                    <div id="unit-2-content" class="unit-content">
-                        <div class="content-inner">
-                            <div class="vertical-question-list">
-                            
-                                <!-- Q-1: Link -->
-                                <a href="https://c2-u2-q1.vercel.app/" target="_blank" rel="noopener noreferrer" class="question-item">
-                                    <h3>1. Explain the Method of Equal Appearing Intervals.</h3>
-                                    <ul>
-                                        <li>a) Outline the steps involved in constructing a scale using this method.</li>
-                                        <li>b) Discuss its assumptions and major advantages.</li>
-                                        <li>c) Critically evaluate its limitations with suitable psychological examples.</li>
-                                    </ul>
-                                    <span class="icon">🔗</span> <!-- Link icon -->
-                                </a>
-                                
-                                <!-- Q-2: Link -->
-                                <a href="https://c2-u2-q2.vercel.app/" target="_blank" rel="noopener noreferrer" class="question-item">
-                                    <h3>2. Describe the Method of Summated Ratings (Likert Scale).</h3>
-                                    <ul>
-                                        <li>a) Explain the process of item selection, scoring, and validation.</li>
-                                        <li>b) Differentiate between summated and equal-appearing interval scales.</li>
-                                        <li>c) Evaluate the reliability and practical utility of the Likert approach.</li>
-                                    </ul>
-                                    <span class="icon">🔗</span> <!-- Link icon -->
-                                </a>
-    
-                                <!-- Q-3: Modal Trigger -->
-                                <a href="https://c2-u2-q3.vercel.app/" target="_blank" rel="noopener noreferrer" class="question-item">
-                                    <h3>3. Discuss the Method of Paired Comparisons.</h3>
-                                    <ul>
-                                        <li>a) Describe how stimuli are compared and ranked in this method.</li>
-                                        <li>b) Explain the mathematical basis used to derive the scale values.</li>
-                                        <li>c) Indicate potential areas in psychology where this method is most effective.</li>
-                                    </ul>
-                                    <span class="icon">🔗</span> <!-- Content icon -->
-                                </a>
-                                
-                                <!-- Q-4 to Q-14: Modal Triggers -->
-                                <a href="https://c2-u2-q3-6gc3.vercel.app/" target="_blank" rel="noopener noreferrer" class="question-item">
-                                    <h3>4. Elaborate on the Method of Successive Categories.</h3>
-                                    <ul>
-                                        <li>a) Explain the conceptual framework and procedure of this scaling technique.</li>
-                                        <li>b) Compare it with the method of equal-appearing intervals.</li>
-                                        <li>c) Discuss how the categorization of stimuli affects data interpretation.</li>
-                                    </ul>
-                                    <span class="icon">🔗</span>
-                                </a>
-                                <a href="https://c2-u2-q5.vercel.app/" target="_blank" rel="noopener noreferrer" class="question-item">
-                                    <h3>5. Analyze various Ranking Methods used in psychological measurement.</h3>
-                                    <ul>
-                                        <li>a) Differentiate between simple ranking and comparative ranking.</li>
-                                        <li>b) Explain how ranking can be used to measure preferences and attitudes.</li>
-                                        <li>c) Discuss problems such as order effects and respondent fatigue.</li>
-                                    </ul>
-                                    <span class="icon">🔗</span>
-                                </a>
-                                <div class="question-item" data-modal-trigger role="button" tabindex="0">
-                                    <h3>6. Explain the use of the Semantic Differential and Q-Sort techniques.</h3>
-                                    <ul>
-                                        <li>a) Describe the structure and interpretation of semantic differential scales.</li>
-                                        <li>b) Explain how Q-Sort is employed in personality and self-concept research.</li>
-                                        <li>c) Compare their psychometric strengths and weaknesses.</li>
-                                    </ul>
-                                    <span class="icon">📝</span>
-                                </div>
-                                <div class="question-item" data-modal-trigger role="button" tabindex="0">
-                                    <h3>7. Critically discuss the common Problems and Evaluations of Scaling Methods.</h3>
-                                    <ul>
-                                        <li>a) Identify general challenges faced during scaling (e.g., response bias, social desirability).</li>
-                                        <li>b) Discuss validity and reliability issues in attitude measurement.</li>
-                                        <li>c) Suggest strategies to enhance accuracy in psychological scaling.</li>
-                                    </ul>
-                                    <span class="icon">📝</span>
-                                </div>
-                                <div class="question-item" data-modal-trigger role="button" tabindex="0">
-                                    <h3>8. Discuss the Nature and Problems of Rating Scales.</h3>
-                                    <ul>
-                                        <li>a) Describe the psychological basis of rating scales.</li>
-                                        <li>b) Explain various errors such as the halo effect, leniency, and central tendency.</li>
-                                        <li>c) Suggest steps to minimize these errors in applied settings.</li>
-                                    </ul>
-                                    <span class="icon">📝</span>
-                                </div>
-                                <div class="question-item" data-modal-trigger role="button" tabindex="0">
-                                    <h3>9. Describe the major Forms of Rating Scales.</h3>
-                                    <ul>
-                                        <li>a) Explain numerical, graphic, descriptive, checklist, and forced-choice formats.</li>
-                                        <li>b) Discuss their relevance to measurement of attitudes, behavior, and performance.</li>
-                                        <li>c) Evaluate how scale format choice impacts data reliability and interpretability.</li>
-                                    </ul>
-                                    <span class="icon">📝</span>
-                                </div>
-                                <div class="question-item" data-modal-trigger role="button" tabindex="0">
-                                    <h3>10. Explain selected Tools of Data Collection in psychological research.</h3>
-                                    <ul>
-                                        <li>a) Define sociometric techniques and describe how they reveal group structure and dynamics.</li>
-                                        <li>b) Outline key projective techniques such as TAT, Rorschach, and sentence completion tests.</li>
-                                    </ul>
-                                    <span class="icon">📝</span>
-                                </div>
-                                <div class="question-item" data-modal-trigger role="button" tabindex="0">
-                                    <h3>11. Define projective techniques and explain their theoretical foundations.</h3>
-                                    <ul>
-                                        <li>a) Discuss how projective tests differ from structured and objective personality measures.</li>
-                                        <li>b) Explain the role of ambiguity and projection in understanding the unconscious.</li>
-                                        <li>c) Illustrate with examples how projective tests can reveal hidden motives or conflicts.</li>
-                                    </ul>
-                                    <span class="icon">📝</span>
-                                </div>
-                                <div class="question-item" data-modal-trigger role="button" tabindex="0">
-                                    <h3>12. Discuss the Thematic Apperception Test (TAT) and its use in exploring human motivation.</h3>
-                                    <ul>
-                                        <li>a) Explain the process of stimulus presentation and story construction.</li>
-                                        <li>b) Describe how themes of achievement, power, and affiliation are analyzed.</li>
-                                        <li>c) Identify the test’s strengths, limitations, and contemporary adaptations.</li>
-                                    </ul>
-                                    <span class="icon">📝</span>
-                                </div>
-                                <div class="question-item" data-modal-trigger role="button" tabindex="0">
-                                    <h3>13. Examine other major projective techniques used in clinical and research settings.</h3>
-                                    <ul>
-                                        <li>a) Describe the Sentence Completion Test.</li>
-                                        <li>b) Evaluate the relevance of nonverbal projective tests in cross-cultural assessment.</li>
-                                    </ul>
-                                    <span class="icon">📝</span>
-                                </div>
-                                <div class="question-item" data-modal-trigger role="button" tabindex="0">
-                                    <h3>14. Critically assess the role and current relevance of projective techniques in psychological assessment.</h3>
-                                    <ul>
-                                        <li>a) Discuss the ethical and interpretive concerns associated with their use.</li>
-                                        <li>b) Compare projective tests with modern self-report and behavioral measures.</li>
-                                        <li>c) Propose how digital or computer-assisted projective tools could evolve in the future.</li>
-                                    </ul>
-                                    <span class="icon">📝</span>
-                                </div>
-                                
-                            </div> <!-- end vertical-question-list -->
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Unit 1 Card -->
-                <div class="unit-card" data-target="unit-1-content">
-                    <div class="unit-card-header" role="button" tabindex="0" aria-controls="unit-1-content" aria-expanded="false">
-                        <div class="unit-card-title">
-                            <span class="emoji">🌟</span>
-                            <h2>Unit-1 (BC)</h2>
-                        </div>
-                        <span class="toggle-icon">▼</span>
-                    </div>
-                    <!-- Unit 1 Content (Hidden) -->
-                    <div id="unit-1-content" class="unit-content">
-                        <div class="content-inner">
-                            <p>Content for Unit-1 will be added here. Stay tuned!</p>
-                        </div>
-                    </div>
-                </div>
+    <div class="container mx-auto p-4 md:p-8 max-w-7xl">
         
+        <!-- ============================================= -->
+        <!-- == VIEW 1: NEW MAIN HUB ("Psy Core Hub")   == -->
+        <!-- ============================================= -->
+        <main id="psy-hub-view" class="view active">
+            <h1 class="text-5xl md:text-6xl font-extrabold text-center mb-6">
+                <span class="mr-4">🧠</span><span class="bg-gradient-to-r from-blue-700 to-indigo-900 bg-clip-text text-transparent">Interactive Core Psychology Notes</span>
+            </h1>
+            <p class="text-center text-lg text-slate-600 mb-16">
+                Your Central Space for Interactive Core Psychology Notes and Dashboards.
+            </p>
+
+            <!-- Core 1 and 2 Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
+                
+                <!-- Core 1 Card -->
+                <div data-target="core-1-dashboard-view" class="core-card rounded-2xl shadow-xl hover:shadow-2xl hover:-translate-y-1.5 transition-all duration-300 cursor-pointer overflow-hidden border border-gray-200">
+                    <div class="p-6 bg-gradient-to-r from-blue-500 to-blue-700 text-white text-center">
+                        <h3 class="text-2xl font-bold">Core-1</h3>
+                    </div>
+                    <div class="p-8 text-center bg-core-card-blue-light flex-grow flex flex-col justify-center">
+                        <h2 class="text-xl font-semibold text-blue-900">Cognitive Psychology and Experiments 1</h2>
+                    </div>
+                </div>
+
+                <!-- Core 2 Card -->
+                <div data-target="core-2-dashboard-view" class="core-card rounded-2xl shadow-xl hover:shadow-2xl hover:-translate-y-1.5 transition-all duration-300 cursor-pointer overflow-hidden border border-gray-200">
+                     <div class="p-6 bg-gradient-to-r from-green-500 to-green-700 text-white text-center">
+                        <h3 class="text-2xl font-bold">Core-2</h3>
+                    </div>
+                    <div class="p-8 text-center bg-core-card-green-light flex-grow flex flex-col justify-center">
+                        <h2 class="text-xl font-semibold text-green-900">Psychological Measurement and Research</h2>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Available Content Section -->
+            <div class="mt-20 bg-white rounded-2xl shadow-xl border border-gray-100 p-8 md:p-12">
+                <h2 class="text-3xl font-bold text-center mb-10 bg-gradient-to-r from-slate-700 to-slate-900 bg-clip-text text-transparent">
+                    Available Content Right Now
+                </h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+                    <!-- Core-1 Content (Now on the Left) -->
+                    <div class="space-y-4">
+                        <h3 class="text-xl font-bold text-blue-700">Core-1: Cognitive Psychology</h3>
+                        <div class="space-y-4 mt-4">
+                            <div class="p-5 bg-gray-100 rounded-lg border border-gray-200 shadow-sm">
+                                <p class="font-semibold text-gray-800">U-1 to U-4</p>
+                                <p class="text-sm text-gray-600">Coming Soon 🔒</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Core-2 Content (Now on the Right) -->
+                    <div class="space-y-4">
+                        <h3 class="text-xl font-bold text-green-700">Core-2: Psychological Measurement</h3>
+                        <div class="space-y-4 mt-4">
+                            <div class="p-5 bg-unit-box-1 rounded-lg border border-blue-200 shadow-sm">
+                                <p class="font-semibold text-blue-800">U-1: Psychophysics</p>
+                                <p class="text-sm text-blue-700">An Introduction to Psychophysics</p>
+                            </div>
+                            <div class="p-5 bg-unit-box-2 rounded-lg border border-green-200 shadow-sm">
+                                <p class="font-semibold text-green-800">U-2: Scaling Techniques</p>
+                                <p class="text-sm text-green-700">Q-1 to Q-5 available as infographics</p>
+                            </div>
+                            <div class="p-5 bg-unit-box-3 rounded-lg border border-purple-200 shadow-sm">
+                                <p class="font-semibold text-purple-800">U-3: Research Designs</p>
+                                <p class="text-sm text-purple-700">"Blueprint of Research" PDF available</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <p class="text-center text-slate-500 mt-12 text-sm italic">
+                    More content coming soon — stay tuned for regular updates.
+                </p>
+            </div>
+
+            <!-- Footer -->
+            <footer class="mt-20 bg-white rounded-2xl shadow-xl border border-gray-100 p-8">
+                <p class="text-center text-lg font-semibold bg-gradient-to-r from-slate-600 to-slate-800 bg-clip-text text-transparent">
+                    All notes and resources are curated and created by Tushar Joshi.
+                </p>
+            </footer>
+
+        </main>
+
+        <!-- ============================================= -->
+        <!-- == VIEW 2: CORE-1 DASHBOARD ("Locked")     == -->
+        <!-- ============================================= -->
+        <main id="core-1-dashboard-view" class="view">
+            
+            <!-- Back Button -->
+            <button class="back-btn back-to-hub mb-8 inline-block font-semibold text-blue-600 border border-blue-500 rounded-lg px-4 py-2 hover:bg-blue-500 hover:text-white transition-colors" data-target="psy-hub-view">
+                &larr; Back to Psy Core Hub
+            </button>
+            
+            <h1 class="text-3xl md:text-4xl font-bold text-center mb-12 bg-gradient-to-r from-gray-600 to-gray-800 bg-clip-text text-transparent">
+                Core-1: Cognitive Psychology
+            </h1>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                
+                <!-- Unit 1 Locked Card -->
+                <div class="unit-card rounded-2xl shadow-lg overflow-hidden border border-gray-200">
+                    <div class="p-6 bg-gradient-to-r from-gray-500 to-gray-700 text-white text-center">
+                        <h3 class="text-2xl font-bold">Unit-1</h3>
+                    </div>
+                    <div class="p-8 text-center bg-gray-100 flex-grow flex flex-col justify-center">
+                        <h2 class="text-xl font-semibold text-gray-600">🔒 Basics of Perception and Audition</h2>
+                    </div>
+                </div>
+
+                <!-- Unit 2 Locked Card -->
+                <div class="unit-card rounded-2xl shadow-lg overflow-hidden border border-gray-200">
+                    <div class="p-6 bg-gradient-to-r from-gray-500 to-gray-700 text-white text-center">
+                        <h3 class="text-2xl font-bold">Unit-2</h3>
+                    </div>
+                    <div class="p-8 text-center bg-gray-100 flex-grow flex flex-col justify-center">
+                        <h2 class="text-xl font-semibold text-gray-600">🔒 Vision</h2>
+                    </div>
+                </div>
+
+                <!-- Unit 3 Locked Card -->
+                <div class="unit-card rounded-2xl shadow-lg overflow-hidden border border-gray-200">
+                    <div class="p-6 bg-gradient-to-r from-gray-500 to-gray-700 text-white text-center">
+                        <h3 class="text-2xl font-bold">Unit-3</h3>
+                    </div>
+                    <div class="p-8 text-center bg-gray-100 flex-grow flex flex-col justify-center">
+                        <h2 class="text-xl font-semibold text-gray-600">🔒 Other Senses</h2>
+                    </div>
+                </div>
+
+                <!-- Unit 4 Locked Card (Added to make it 4) -->
+                 <div class="unit-card rounded-2xl shadow-lg overflow-hidden border border-gray-200">
+                    <div class="p-6 bg-gradient-to-r from-gray-500 to-gray-700 text-white text-center">
+                        <h3 class="text-2xl font-bold">Unit-4</h3>
+                    </div>
+                    <div class="p-8 text-center bg-gray-100 flex-grow flex flex-col justify-center">
+                        <h2 class="text-xl font-semibold text-gray-600">🔒 Motor Processes</h2>
+                    </div>
+                </div>
+
+            </div>
+            
+            <p class="text-center text-gray-500 text-lg mt-12">
+                Content will be added soon.
+            </WELCOME>
+        </main>
+        
+        <!-- ============================================= -->
+        <!-- == VIEW 3: CORE-2 DASHBOARD (Functional)   == -->
+        <!-- ============================================= -->
+        <main id="core-2-dashboard-view" class="view">
+            
+            <!-- Back Button -->
+            <button class="back-btn back-to-hub mb-8 inline-block font-semibold text-blue-600 border border-blue-500 rounded-lg px-4 py-2 hover:bg-blue-500 hover:text-white transition-colors" data-target="psy-hub-view">
+                &larr; Back to Psy Core Hub
+            </button>
+            
+            <h1 class="text-3xl md:text-4xl font-bold text-center mb-12 bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
+                Core-2: Psychological Measurement and Research
+            </h1>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                
+                <!-- Unit 1 Card (Ordered) -->
+                <div class="unit-card rounded-2xl shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer overflow-hidden" data-target="unit-1-view">
+                    <div class="p-6 bg-gradient-to-r from-blue-500 to-blue-700 text-white text-center">
+                        <h3 class="text-2xl font-bold">Unit-1</h3>
+                    </div>
+                    <div class="p-8 text-center bg-blue-50 flex-grow flex flex-col justify-center">
+                        <h2 class="text-xl font-semibold text-blue-900">Psychophysics and Psychological Measurement</h2>
+                    </div>
+                </div>
+                
+                <!-- Unit 2 Card (Ordered) -->
+                <div class="unit-card rounded-2xl shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer overflow-hidden" data-target="unit-2-view">
+                    <div class="p-6 bg-gradient-to-r from-green-500 to-green-700 text-white text-center">
+                        <h3 class="text-2xl font-bold">Unit-2</h3>
+                    </div>
+                    <div class="p-8 text-center bg-green-50 flex-grow flex flex-col justify-center">
+                        <h2 class="text-xl font-semibold text-green-900">Scaling Techniques and Tools of Data Collection</h2>
+                    </div>
+                </div>
+
+                <!-- Unit 3 Card (Ordered) -->
+                <div class="unit-card rounded-2xl shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer overflow-hidden" data-target="unit-3-view">
+                    <div class="p-6 bg-gradient-to-r from-purple-500 to-purple-700 text-white text-center">
+                        <h3 class="text-2xl font-bold">Unit-3</h3>
+                    </div>
+                    <div class="p-8 text-center bg-purple-50 flex-grow flex flex-col justify-center">
+                        <h2 class="text-xl font-semibold text-purple-900">Research Designs and Experimental Designs</h2>
+                    </div>
+                </div>
+
             </div>
         </main>
+        
+        <!-- ============================================= -->
+        <!-- == VIEW 4: UNIT 3 (BP) SECTION           == -->
+        <!-- ============================================= -->
+        <main id="unit-3-view" class="view">
+            <button class="back-btn back-to-core-2 mb-8 inline-block font-semibold text-blue-600 border border-blue-500 rounded-lg px-4 py-2 hover:bg-blue-500 hover:text-white transition-colors" data-target="core-2-dashboard-view">
+                &larr; Back to Core-2
+            </button>
+            <h2 class="text-3xl font-bold mb-6 text-slate-700">Unit-3 (BP)</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mt-8">
+                <a href="https://decisive-yellow-lln9s8g8b6.edgeone.app/C2%20U3%20Notes.pdf" target="_blank" rel="noopener noreferrer" class="q-card flex items-center justify-center p-6 h-32 bg-purple-100 text-purple-800 rounded-xl shadow-md hover:shadow-lg hover:-translate-y-1 transition-all duration-300 font-semibold text-lg text-center">
+                    The Blueprint of Research
+                </a>
+            </div>
+        </main>
+        
+        <!-- ============================================= -->
+        <!-- == VIEW 5: UNIT 2 (KG) SECTION             == -->
+        <!-- ============================================= -->
+        <main id="unit-2-view" class="view">
+            <button class="back-btn back-to-core-2 mb-8 inline-block font-semibold text-blue-600 border border-blue-500 rounded-lg px-4 py-2 hover:bg-blue-500 hover:text-white transition-colors" data-target="core-2-dashboard-view">
+                &larr; Back to Core-2
+            </button>
+            <h2 class="text-3xl font-bold mb-6 text-slate-700">Unit-2 (KG)</h2>
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                
+                <!-- Active Q Cards -->
+                <a href="https://c2-u2-q1.vercel.app/" target="_blank" rel="noopener noreferrer" class="q-card flex items-center justify-center p-4 h-28 bg-q1-color text-green-800 rounded-xl shadow-md hover:shadow-lg hover:-translate-y-1 transition-all duration-300 font-bold text-xl">Q-1</a>
+                <a href="https://c2-u2-q2.vercel.app/" target="_blank" rel="noopener noreferrer" class="q-card flex items-center justify-center p-4 h-28 bg-q2-color text-teal-800 rounded-xl shadow-md hover:shadow-lg hover:-translate-y-1 transition-all duration-300 font-bold text-xl">Q-2</a>
+                <a href="https://c2-u2-q3.vercel.app/" target="_blank" rel="noopener noreferrer" class="q-card flex items-center justify-center p-4 h-28 bg-q3-color text-green-900 rounded-xl shadow-md hover:shadow-lg hover:-translate-y-1 transition-all duration-300 font-bold text-xl">Q-3</a>
+                <a href="https://c2-u2-q3-6gc3.vercel.app/" target="_blank" rel="noopener noreferrer" class="q-card flex items-center justify-center p-4 h-28 bg-q4-color text-blue-800 rounded-xl shadow-md hover:shadow-lg hover:-translate-y-1 transition-all duration-300 font-bold text-xl">Q-4</a>
+                <a href="https://c2-u2-q5.vercel.app/" target="_blank" rel="noopener noreferrer" class="q-card flex items-center justify-center p-4 h-28 bg-q5-color text-lime-800 rounded-xl shadow-md hover:shadow-lg hover:-translate-y-1 transition-all duration-300 font-bold text-xl">Q-5</a>
+                
+                <!-- Locked Q Cards -->
+                <button class="q-card soon-btn flex items-center justify-center p-4 h-28 bg-gray-200 text-gray-500 rounded-xl shadow-md font-bold text-xl cursor-not-allowed">🔒 Q-6</button>
+                <button class="q-card soon-btn flex items-center justify-center p-4 h-28 bg-gray-200 text-gray-500 rounded-xl shadow-md font-bold text-xl cursor-not-allowed">🔒 Q-7</button>
+                <button class="q-card soon-btn flex items-center justify-center p-4 h-28 bg-gray-200 text-gray-500 rounded-xl shadow-md font-bold text-xl cursor-not-allowed">🔒 Q-8</button>
+                <button class="q-card soon-btn flex items-center justify-center p-4 h-28 bg-gray-200 text-gray-500 rounded-xl shadow-md font-bold text-xl cursor-not-allowed">🔒 Q-9</button>
+                <button class="q-card soon-btn flex items-center justify-center p-4 h-28 bg-gray-200 text-gray-500 rounded-xl shadow-md font-bold text-xl cursor-not-allowed">🔒 Q-10</button>
+                <button class="q-card soon-btn flex items-center justify-center p-4 h-28 bg-gray-200 text-gray-500 rounded-xl shadow-md font-bold text-xl cursor-not-allowed">🔒 Q-11</button>
+                <button class="q-card soon-btn flex items-center justify-center p-4 h-28 bg-gray-200 text-gray-500 rounded-xl shadow-md font-bold text-xl cursor-not-allowed">🔒 Q-12</button>
+                <button class="q-card soon-btn flex items-center justify-center p-4 h-28 bg-gray-200 text-gray-500 rounded-xl shadow-md font-bold text-xl cursor-not-allowed">🔒 Q-13</button>
+                <button class="q-card soon-btn flex items-center justify-center p-4 h-28 bg-gray-200 text-gray-500 rounded-xl shadow-md font-bold text-xl cursor-not-allowed">🔒 Q-14</button>
+            </div>
+        </main>
+        
+        <!-- ============================================= -->
+        <!-- == VIEW 6: UNIT 1 (BC) SECTION             == -->
+        <!-- ============================================= -->
+        <main id="unit-1-view" class="view">
+            <button class="back-btn back-to-core-2 mb-8 inline-block font-semibold text-blue-600 border border-blue-500 rounded-lg px-4 py-2 hover:bg-blue-500 hover:text-white transition-colors" data-target="core-2-dashboard-view">
+                &larr; Back to Core-2
+            </button>
+            <h2 class="text-3xl font-bold mb-6 text-slate-700">Unit-1 (BC)</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mt-8">
+                <a href="httpsS://hissing-lime-u7snz36rvz.edgeone.app/C2%20U1%20Notes.pdf" target="_blank" rel="noopener noreferrer" class="q-card flex items-center justify-center p-6 h-32 bg-blue-100 text-blue-800 rounded-xl shadow-md hover:shadow-lg hover:-translate-y-1 transition-all duration-300 font-semibold text-lg text-center">
+                    Introduction to Psychophysics & Measurement and Scaling
+                </a>
+            </div>
+        </main>
+        
     </div>
 
-    <!-- Modal Dialog -->
-    <div class="modal-overlay" id="coming-soon-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
-        <div class="modal-dialog">
-            <button class="modal-close-btn" aria-label="Close dialog">
-                <svg fill="currentColor" viewBox="0 0 24 24" width="22px" height="22px"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"></path></svg>
+    <!-- ============================================= -->
+    <!-- == GLOBAL MODAL FOR "COMING SOON"          == -->
+    <!-- ============================================= -->
+    <div id="modal" class="modal fixed inset-0 z-50 items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm hidden">
+        <div class="modal-content bg-white rounded-xl shadow-2xl w-11/12 max-w-md p-8 text-center">
+            <h3 class="text-2xl font-bold text-gray-800 mb-4">Coming Soon!</h3>
+            <p class="text-gray-600 mb-6">Content will be added soon.</p>
+            <button id="modal-close-btn" class="w-full bg-blue-600 text-white font-semibold py-3 rounded-lg hover:bg-blue-700 transition-colors">
+                OK
             </button>
-            <p id="modal-title">Content will be added soon. Please check back later. 🚀</p>
         </div>
     </div>
 
-
+    <!-- ============================================= -->
+    <!-- == GLOBAL JAVASCRIPT FOR NAVIGATION        == -->
+    <!-- ============================================= -->
     <script>
-        /* --- [Section 8: JavaScript Interactivity] ---
-          NEW: Accordion Logic
-        */
         document.addEventListener('DOMContentLoaded', () => {
-
-            // --- Logic for Unit Selection (Accordion) ---
-            const unitCardHeaders = document.querySelectorAll('.unit-card-header');
-            const allUnitCards = document.querySelectorAll('.unit-card');
+            const views = document.querySelectorAll('.view');
+            const clickableElements = document.querySelectorAll('[data-target]');
+            const soonBtns = document.querySelectorAll('.soon-btn');
             
-            unitCardHeaders.forEach(header => {
+            const modal = document.getElementById('modal');
+            const modalContent = modal.querySelector('.modal-content');
+            const modalCloseBtn = document.getElementById('modal-close-btn');
+            const body = document.body;
+
+            // Map of view IDs to their body background classes
+            const viewBackgrounds = {
+                'psy-hub-view': 'bg-gradient-to-br from-slate-50 to-indigo-50', // Main Hub
+                'core-1-dashboard-view': 'bg-gray-100', // Locked core
+                'core-2-dashboard-view': 'bg-slate-50', // Core-2 hub
+                'unit-1-view': 'bg-blue-50',  // Unit 1
+                'unit-2-view': 'bg-green-50', // Unit 2
+                'unit-3-view': 'bg-purple-50' // Unit 3
+            };
+
+            // Function to switch views
+            function showView(viewId) {
+                // 1. Remove all old background classes from the map
+                Object.values(viewBackgrounds).forEach(bgClasses => {
+                    bgClasses.split(' ').forEach(cls => body.classList.remove(cls));
+                });
+                // Also remove the default just in case
+                body.classList.remove('bg-slate-50');
+
+                // 2. Add the new background class(es)
+                const newBgClass = viewBackgrounds[viewId] || 'bg-slate-50'; // Default to slate-50
+                newBgClass.split(' ').forEach(cls => body.classList.add(cls));
                 
-                // Click event
-                header.addEventListener('click', () => {
-                    toggleAccordion(header);
+                // 3. Hide all views
+                views.forEach(view => {
+                    view.classList.remove('active');
                 });
                 
-                // Keyboard event (Enter/Space)
-                header.addEventListener('keydown', (event) => {
-                    if (event.key === 'Enter' || event.key === ' ') {
-                        event.preventDefault(); // Stop space from scrolling
-                        toggleAccordion(header);
-                    }
-                });
-            });
-
-            function toggleAccordion(clickedHeader) {
-                const parentCard = clickedHeader.parentElement;
-                const content = parentCard.querySelector('.unit-content');
-                const isAlreadyOpen = parentCard.classList.contains('active');
-
-                // 1. Close all cards first
-                allUnitCards.forEach(card => {
-                    card.classList.remove('active');
-                    card.querySelector('.unit-card-header').setAttribute('aria-expanded', 'false');
-                    card.querySelector('.unit-content').classList.remove('open');
-                });
-
-                // 2. If the clicked card was not already open, open it.
-                if (!isAlreadyOpen) {
-                    parentCard.classList.add('active');
-                    clickedHeader.setAttribute('aria-expanded', 'true');
-                    content.classList.add('open');
+                // 4. Show the target view
+                const targetView = document.getElementById(viewId);
+                if (targetView) {
+                    targetView.classList.add('active');
                 }
-                // If it *was* open, step 1 already closed it, so it toggles shut.
-            }
-
-
-            // --- Logic for "Coming Soon" Modal ---
-            const modalOverlay = document.getElementById('coming-soon-modal');
-            const modalTriggers = document.querySelectorAll('[data-modal-trigger]');
-            const modalCloseBtn = modalOverlay.querySelector('.modal-close-btn');
-
-            function openModal() {
-                modalOverlay.classList.add('visible');
-                modalCloseBtn.focus(); // Set focus to close button
-            }
-
-            function closeModal() {
-                modalOverlay.classList.remove('visible');
-            }
-
-            // Triggers for opening the modal (Q-3 to Q-14)
-            modalTriggers.forEach(trigger => {
-                // Click event
-                trigger.addEventListener('click', openModal);
                 
-                // Keyboard event (Enter/Space)
-                trigger.addEventListener('keydown', (event) => {
-                    if (event.key === 'Enter' || event.key === ' ') {
-                        event.preventDefault();
-                        openModal();
-                    }
+                // 5. Scroll to top
+                window.scrollTo(0, 0);
+            }
+
+            // --- Event Listeners ---
+
+            // 1. Navigation for all cards and buttons
+            clickableElements.forEach(element => {
+                element.addEventListener('click', (e) => {
+                    const targetView = e.currentTarget.getAttribute('data-target');
+                    showView(targetView);
                 });
             });
-
-            // Close button
-            modalCloseBtn.addEventListener('click', closeModal);
-
-            // Close on overlay click
-            modalOverlay.addEventListener('click', (event) => {
-                if (event.target === modalOverlay) {
-                    closeModal();
-                }
+            
+            // 2. "Coming Soon" Modal Buttons
+            soonBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    modal.classList.remove('hidden');
+                    modal.classList.add('flex', 'modal-open');
+                    modalContent.classList.add('modal-content-open');
+                });
             });
-
-            // Close with "Escape" key
-            document.addEventListener('keydown', (event) => {
-                if (event.key === 'Escape' && modalOverlay.classList.contains('visible')) {
-                    closeModal();
+            
+            // 3. Modal Close Button
+            modalCloseBtn.addEventListener('click', () => {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex', 'modal-open');
+                modalContent.classList.remove('modal-content-open');
+            });
+            
+            // 4. Close modal if clicking outside the content
+            modal.addEventListener('click', (event) => {
+                if (event.target === modal) {
+                    modal.classList.add('hidden');
+                    modal.classList.remove('flex', 'modal-open');
+                    modalContent.classList.remove('modal-content-open');
                 }
             });
 
+            // Set initial state
+            showView('psy-hub-view');
         });
     </script>
 
 </body>
 </html>
-
-
 
 
 
